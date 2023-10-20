@@ -17,7 +17,7 @@ return new class extends Migration
             $table->boolean('active')->default(0);
             $table->string('url')->nullable()->unique();
             $table->string('title')->nullable();
-            $table->string('H1')->nullable();
+            $table->string('h1')->nullable();
             $table->string('description')->nullable();
             $table->dateTime('date_start', $precision = 0)->nullable();
             $table->dateTime('date_end', $precision = 0)->nullable();

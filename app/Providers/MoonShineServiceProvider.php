@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Post;
+use App\MoonShine\Resources\PostResource;
 use Illuminate\Support\ServiceProvider;
 use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
@@ -14,6 +16,10 @@ class MoonShineServiceProvider extends ServiceProvider
     public function boot(): void
     {
         app(MoonShine::class)->menu([
+            MenuGroup::make('Посты', [
+                MenuItem::make('Все', new PostResource())
+                ->badge(fn() => Post::query()->count()),
+            ])->icon('app') ,
             MenuGroup::make('moonshine::ui.resource.system', [
                 MenuItem::make('moonshine::ui.resource.admins_title', new MoonShineUserResource())
                     ->translatable()
@@ -22,9 +28,6 @@ class MoonShineServiceProvider extends ServiceProvider
                     ->translatable()
                     ->icon('bookmark'),
             ])->translatable(),
-
-            MenuItem::make('Documentation', 'https://laravel.com')
-                ->badge(fn() => 'Check'),
         ]);
     }
 }
