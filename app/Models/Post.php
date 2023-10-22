@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use MoonShine\Traits\Models\HasMoonShineChangeLog;
 
 class Post extends Model
 {
@@ -13,12 +14,8 @@ class Post extends Model
     protected $table = 'posts';
     protected $guarded = [];
 
-//    public function categories()
-//    {
-//        return $this->belongsToMany(Categories::class, 'category_posts', 'post_id', 'category_id');
-//    }
-
-    public static $validData = array(
+    use HasMoonShineChangeLog;
+    public static array $validData = array(
         'title' => 'string',
         'url' => 'string',
         'date_start' => 'nullable|string',
@@ -29,4 +26,9 @@ class Post extends Model
         'preview_alt' => 'nullable|string',
         'category' => '',
     );
+
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'category_posts', 'post_id', 'category_id');
+    }
 }

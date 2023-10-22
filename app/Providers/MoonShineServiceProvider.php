@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Category;
 use App\Models\Post;
+use App\MoonShine\Resources\CategoryResource;
 use App\MoonShine\Resources\PostResource;
 use Illuminate\Support\ServiceProvider;
 use MoonShine\MoonShine;
@@ -19,7 +21,9 @@ class MoonShineServiceProvider extends ServiceProvider
             MenuGroup::make('Посты', [
                 MenuItem::make('Все', new PostResource())
                 ->badge(fn() => Post::query()->count()),
-            ])->icon('app') ,
+            ])->icon('app'),
+            MenuItem::make('Категории', new CategoryResource())
+                ->badge(fn() => Category::query()->count())->icon('heroicons.bars-2'),
             MenuGroup::make('moonshine::ui.resource.system', [
                 MenuItem::make('moonshine::ui.resource.admins_title', new MoonShineUserResource())
                     ->translatable()

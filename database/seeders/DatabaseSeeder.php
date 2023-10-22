@@ -13,67 +13,84 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-    //     \App\Models\User::factory(10)->create();
+
         DB::table('moonshine_users')->insert([
             'name' => 'admin',
             'password' => '$2y$10$JjkDbUtdJVwSFo9jqAL9XeTD2NGa3DtslOZEAolAfzQiFwfX6Z.TC',
             'email' => 'admin',
         ]);
 
-//        $category = [
-//            [
-//                'url' => 'splavy',
-//                'title' => 'Сплавы',
-//            ],
-//            [
-//                'url' => 'pohody',
-//                'title' => 'Походы',
-//            ],
-//            [
-//                'url' => 'konnye-pohody',
-//                'title' => 'Конные походы',
-//            ],
-//            [
-//                'url' => 'kayaking',
-//                'title' => 'Каякинг',
-//            ],
-//            [
-//                'url' => 'gornolyzhnye-tury-iz-tyumeni',
-//                'title' => 'Горнолыжные выезды',
-//            ],
-//            [
-//                'url' => 'poleznoe',
-//                'title' => 'Полезное',
-//            ],
-//            [
-//                'url' => 'proshedshie',
-//                'title' => 'Прошедшие',
-//            ],
-//        ];
-//        foreach ($category as $value) {
-//            DB::table('categories')->insert($value);
-//        }
+        $category = [
+            [
+                'active' => 1,
+                'url' => 'splavy',
+                'title' => 'Сплавы',
+            ],
+            [
+                'active' => 1,
+                'url' => 'pohody',
+                'title' => 'Походы',
+            ],
+            [
+                'active' => 1,
+                'url' => 'konnye-pohody',
+                'title' => 'Конные походы',
+            ],
+            [
+                'active' => 1,
+                'url' => 'kayaking',
+                'title' => 'Каякинг',
+            ],
+            [
+                'url' => 'gornolyzhnye-tury-iz-tyumeni',
+                'title' => 'Горнолыжные выезды',
+            ],
+            [
+                'active' => 1,
+                'url' => 'poleznoe',
+                'title' => 'Полезное',
+            ],
+            [
+                'active' => 1,
+                'url' => 'proshedshie',
+                'title' => 'Прошедшие',
+            ],
+        ];
+        foreach ($category as $value) {
+            DB::table('categories')->insert($value);
+        }
 
         $posts = [
             [
+                'active' => 1,
                 'title' => 'post1',
                 'url' => 'post1',
-                'H1' => 'post1',
+                'h1' => 'post1 - h1',
+                'date_start' => '2023-10-18T20:00',
+                'date_end' => '2023-10-27T21:39',
             ],
             [
+                'active' => 1,
                 'title' => 'post2',
                 'url' => 'post2',
-                'H1' => 'post2',
+                'h1' => 'post2- h1',
+                'date_start' => '2023-11-18T20:00',
+                'date_end' => '2023-11-27T21:39',
             ],
             [
+                'active' => 1,
                 'title' => 'post3',
                 'url' => 'post3',
-                'H1' => 'post3',
+                'h1' => 'post3- h1',
+                'date_start' => '2023-11-18T21:00',
+                'date_end' => '2023-11-21T21:39',
             ],
             [
                 'title' => 'post4',
                 'url' => 'post4',
-                'H1' => 'post4',
+                'h1' => 'post4- h1',
+                'date_start' => '2023-11-18T21:00',
+                'date_end' => '2023-11-21T23:00',
             ],
 
         ];
@@ -113,7 +130,8 @@ class DatabaseSeeder extends Seeder
 
         ];
         foreach ($categoryPost as $value) {
-           // DB::table('category_posts')->insert($value);
+            DB::table('category_posts')->insert($value);
         }
+        \App\Models\Post::factory(20)->create();
     }
 }
