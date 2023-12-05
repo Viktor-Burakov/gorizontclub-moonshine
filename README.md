@@ -3,6 +3,7 @@
 ### test
 
 - `touch database/database.sqlite`
+- `touch database/database_test.sqlite`
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan serve --host=gorizontclub --port=80`
