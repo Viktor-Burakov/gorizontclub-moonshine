@@ -13,6 +13,19 @@ return new class extends Migration
     {
         Schema::create('content_block_post', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('content_block_id');
+            $table->unsignedBigInteger('post_id');
+
+            $table->index('post_id', 'content_block_post_post_idx');
+            $table->index('content_block_id', 'content_block_post_content_block_idx');
+
+            $table->foreign('post_id', 'content_block_post_post_fk')
+                ->references('id')
+                ->on('posts');
+            $table->foreign('content_block_id', 'content_block_post_content_block_fk')
+                ->references('id')
+                ->on('content_blocks');
+
             $table->timestamps();
         });
     }

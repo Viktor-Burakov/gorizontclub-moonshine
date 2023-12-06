@@ -1,0 +1,26 @@
+.post-images .dropzone-item {
+    height: 300px;
+    width: unset;
+    overflow: hidden;
+}
+
+.post-images__info {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    font-size: 1rem;
+    background: rgba(255, 255, 255, .7);
+    padding: 0 5px;
+    transition: opacity .3s;
+    word-wrap: break-word;
+    opacity: 0.5;
+}
+
+.dropzone-item:hover .post-images__info {
+    opacity: 1;
+}
+
+.dropzone-remove{
+    cursor: pointer;
+}

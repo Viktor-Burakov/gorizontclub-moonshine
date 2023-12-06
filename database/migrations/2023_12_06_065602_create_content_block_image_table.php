@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('content_block_image', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('content_block_id');
+            $table->unsignedBigInteger('image_id');
+
+            $table->index('image_id', 'content_block_image_image_idx');
+            $table->index('content_block_id', 'content_block_image_content_block_idx');
+
+            $table->foreign('image_id', 'content_block_image_image_fk')
+                ->references('id')
+                ->on('images');
+            $table->foreign('content_block_id', 'content_block_image_content_block_fk')
+                ->references('id')
+                ->on('content_blocks');
+
             $table->timestamps();
         });
     }
