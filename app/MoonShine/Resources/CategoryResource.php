@@ -2,38 +2,31 @@
 
 namespace App\MoonShine\Resources;
 
-use App\Models\Post;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
-
-use MoonShine\Decorations\Flex;
-use MoonShine\Fields\Date;
-use MoonShine\Fields\SwitchBoolean;
+use App\MoonShine\Fields\PostImage;
+use Illuminate\Database\Eloquent\Model;
+use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
-use MoonShine\Fields\Textarea;
-use MoonShine\FormComponents\ChangeLogFormComponent;
-use MoonShine\Resources\Resource;
-use MoonShine\Fields\ID;
-use MoonShine\Actions\FiltersAction;
+use MoonShine\Resources\ModelResource;
 
-class CategoryResource extends Resource
+class CategoryResource extends ModelResource
 {
-    public static string $model = Category::class;
+    protected string $model = Category::class;
 
-    public static string $title = 'Категории';
-    public static array $activeActions = ['create', 'show', 'edit', 'delete'];
-    public string $titleField = 'title';
+    protected string $title = 'Категории';
+    protected array $activeActions = ['create', 'show', 'edit', 'delete'];
+    protected string $column = 'title';
     protected bool $showInModal = true;
 
     public function fields(): array
     {
         return [
-            SwitchBoolean::make('Опубл.', 'active')->autoUpdate(false),
+            Switcher::make('Опубл.', 'active'),
             Text::make('Title', 'title')
                 ->sortable()
                 ->required(),
             Text::make('url')->required(),
+            PostImage::make('preview'),
             Text::make('preview_alt')
                 ->hideOnIndex(),
         ];
@@ -54,17 +47,10 @@ class CategoryResource extends Resource
         return [];
     }
 
-    public function actions(): array
-    {
-        return [
-            FiltersAction::make(trans('moonshine::ui.filters')),
-        ];
-    }
-
     public function components(): array
     {
         return [
-            ChangeLogFormComponent::make('Change log'),
+        //    ChangeLogFormComponent::make('Change log'),
         ];
     }
 }

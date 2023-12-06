@@ -2,45 +2,34 @@
 
 namespace App\MoonShine\Resources;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Post;
+use App\MoonShine\Fields\PostImage;
 use Carbon\Carbon;
-
+use Illuminate\Contracts\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use MoonShine\Decorations\Block;
 use MoonShine\Decorations\Column;
 use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Grid;
-use MoonShine\Fields\BelongsToMany;
 use MoonShine\Fields\Date;
-use MoonShine\Fields\NoInput;
-use MoonShine\Fields\StackFields;
-use MoonShine\Fields\SwitchBoolean;
+use MoonShine\Fields\Image;
+use MoonShine\Fields\Relationships\BelongsToMany;
+use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
-use MoonShine\Fields\Url;
-use MoonShine\Filters\BelongsToManyFilter;
-use MoonShine\Filters\DateFilter;
-use MoonShine\Filters\DateRangeFilter;
-use MoonShine\Filters\SelectFilter;
-use MoonShine\Filters\SwitchBooleanFilter;
 use MoonShine\QueryTags\QueryTag;
-use MoonShine\Resources\Resource;
-use MoonShine\Fields\ID;
-use MoonShine\Actions\FiltersAction;
-use MoonShine\FormComponents\ChangeLogFormComponent;
-use Symfony\Component\Finder\Iterator\DateRangeFilterIterator;
-use Illuminate\Contracts\Database\Eloquent\Builder;
+use MoonShine\Resources\ModelResource;
 
-class PostResource extends Resource
+class PostResource extends ModelResource
 {
-    public static string $model = Post::class;
+    protected string $model = Post::class;
 
-    public static string $title = 'Посты';
-    public static int $itemsPerPage = 20;
-    public static string $orderField = 'date_start';
-    public static string $orderType = 'asc';
-    public static array $activeActions = ['create', 'show', 'edit', 'delete'];
-    public string $titleField = 'title';
+    protected string $title = 'Посты';
+    protected int $itemsPerPage = 20;
+    protected string $sortColumn = 'date_start';
+    protected string $orderType = 'asc';
+    protected array $activeActions = ['create', 'show', 'edit', 'delete'];
+    protected string $column = 'title';
     protected bool $showInModal = true;
 
     public function fields(): array
@@ -52,6 +41,8 @@ class PostResource extends Resource
                         Text::make('Title', 'title')
                             ->sortable()
                             ->required(),
+                        PostImage::make(),
+                        Image::make('preview'),
                         Text::make('url')
                             ->required()
                             ->hideOnIndex(),
@@ -60,7 +51,7 @@ class PostResource extends Resource
                 ])->columnSpan(12),
                 Column::make([
                     Block::make('Основное', [
-                        SwitchBoolean::make('Опубл.', 'active')->autoUpdate(false),
+                        Switcher::make('Опубл.', 'active'),
 
                         Text::make('Заголовок (H1)', 'h1')
                             //  ->hideOnIndex()
@@ -84,7 +75,7 @@ class PostResource extends Resource
                             ->sortable()
                             ->hideOnForm(),
                         BelongsToMany::make('Разделы', 'categories')
-                            ->select()
+                            ->selectMode()
                             ->inLine(separator: ' ', badge: true),
                     ]),
                 ])->columnSpan(12),
@@ -103,12 +94,12 @@ class PostResource extends Resource
             QueryTag::make(
                 'Опубликованы',
                 fn(Builder $query) => $query->where('active', 1)
-            )->icon('show'),
+            )->icon('heroicons.eye'),
             QueryTag::make(
                 'Черновик',
                 fn(Builder $query) => $query->where('active', 0)
             )->icon('heroicons.pencil-square'),
-            
+
         ];
     }
 
@@ -120,23 +111,17 @@ class PostResource extends Resource
     public function filters(): array
     {
         return [
-            DateRangeFilter::make('date_start'),
-            DateRangeFilter::make('date_end'),
-            BelongsToManyFilter::make('Categories')
+            Text::make('date_start'),
+            Text::make('date_end'),
+            BelongsToMany::make('Categories')
         ];
     }
 
-    public function actions(): array
-    {
-        return [
-            FiltersAction::make(trans('moonshine::ui.filters')),
-        ];
-    }
 
     public function components(): array
     {
         return [
-            ChangeLogFormComponent::make('Change log'),
+         //   ChangeLogFormComponent::make('Change log'),
         ];
     }
 }
