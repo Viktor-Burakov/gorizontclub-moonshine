@@ -16,11 +16,11 @@ class ContentBlockFactory extends Factory
      */
     public function definition(): array
     {
-        $name = ucfirst(fake()->country());
+        $name = fake()->city . ' - ' . fake()->monthName()  . ' - ' . fake()->numberBetween(1,31);
         return [
            'name' => $name,
            'title' => $name,
-           'description' => fake()->text,
+           'description' => fake()->text(2000),
         ];
     }
 }

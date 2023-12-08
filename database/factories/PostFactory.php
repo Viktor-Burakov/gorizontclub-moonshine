@@ -17,17 +17,19 @@ class PostFactory extends Factory
      */
     public function definition(): array
     {
-        $title = fake()->city;
+        $title = fake()->country . ' | ' . fake()->address() . ' | ' . fake()->date;
+        $url = str_slug($title);
         $date_start = fake()->dateTimeBetween('+1 month', '+3 month');
-        $date_end = fake()->dateTimeBetween($date_start, $date_start->format('Y-m-d H:i:s').' +10 days');
+        $date_end = fake()->dateTimeBetween($date_start, $date_start->format('Y-m-d H:i:s') . ' +10 days');
 
         return [
             'active' => fake()->boolean,
             'title' => $title,
-            'url' => str_slug($title),
+            'url' => $url,
             'h1' => $title . '-H1',
             'description' => fake()->text(300),
-            'preview_text' => fake()->text(150),
+            'preview_text' => fake()->text(400),
+            'preview' => $url . '.jpg',
             'preview_alt' => fake()->text(150),
             'date_start' => $date_start,
             'date_end' => $date_end,
