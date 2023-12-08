@@ -24,7 +24,7 @@ class ImageService
     public function saveToJpgAndWebP(string $filePath): string
     {
         $this->saveToJpg($filePath);
-        $this->saveToWebP($filePath);
+       // todo $this->saveToWebP($filePath);
         return $filePath;
     }
 

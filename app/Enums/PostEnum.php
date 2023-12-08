@@ -4,8 +4,8 @@ namespace App\Enums;
 
 class PostEnum
 {
-    const POST_PREVIEW_SIZE = [
-        'dir' => 'post_preview/',
+    const POST_PREVIEW = [
+        'dir' => 'images_test/post_preview/',
         'width' => '360',
         'height' => '360',
     ];
