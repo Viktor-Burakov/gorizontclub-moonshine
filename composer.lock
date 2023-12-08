@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bbd9477fa2743e6805609ed722e496f2",
+    "content-hash": "8e7dc39ee07baf3253712eec9eca082d",
     "packages": [
         {
             "name": "brick/math",
@@ -1046,6 +1046,124 @@
             "time": "2023-12-03T19:50:20+00:00"
         },
         {
+            "name": "intervention/gif",
+            "version": "3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/gif.git",
+                "reference": "cfececc760862f075a52acf747031bad08c8301b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/gif/zipball/cfececc760862f075a52acf747031bad08c8301b",
+                "reference": "cfececc760862f075a52acf747031bad08c8301b",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Gif\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "Native PHP GIF Encoder/Decoder",
+            "homepage": "https://github.com/intervention/gif",
+            "keywords": [
+                "animation",
+                "gd",
+                "gif",
+                "image"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/gif/issues",
+                "source": "https://github.com/Intervention/gif/tree/3.0.0"
+            },
+            "time": "2023-11-27T18:54:30+00:00"
+        },
+        {
+            "name": "intervention/image",
+            "version": "3.0.0-rc.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Intervention/image.git",
+                "reference": "714f5142507c48ea9bc4e8e6565692d651b5ea24"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Intervention/image/zipball/714f5142507c48ea9bc4e8e6565692d651b5ea24",
+                "reference": "714f5142507c48ea9bc4e8e6565692d651b5ea24",
+                "shasum": ""
+            },
+            "require": {
+                "intervention/gif": "^3",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "mockery/mockery": "^1.6",
+                "phpstan/phpstan": "^1",
+                "phpunit/phpunit": "^9"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Intervention\\Image\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Oliver Vogel",
+                    "email": "oliver@intervention.io",
+                    "homepage": "https://intervention.io/"
+                }
+            ],
+            "description": "PHP image manipulation",
+            "homepage": "https://image.intervention.io/",
+            "keywords": [
+                "gd",
+                "image",
+                "imagick",
+                "resize",
+                "thumbnail",
+                "watermark"
+            ],
+            "support": {
+                "issues": "https://github.com/Intervention/image/issues",
+                "source": "https://github.com/Intervention/image/tree/3.0.0-rc.2"
+            },
+            "funding": [
+                {
+                    "url": "https://paypal.me/interventionio",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/Intervention",
+                    "type": "github"
+                }
+            ],
+            "time": "2023-12-02T11:49:10+00:00"
+        },
+        {
             "name": "laravel/framework",
             "version": "v10.35.0",
             "source": {
@@ -1246,6 +1364,63 @@
                 "source": "https://github.com/laravel/framework"
             },
             "time": "2023-12-05T14:50:33+00:00"
+        },
+        {
+            "name": "laravel/helpers",
+            "version": "v1.7.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel/helpers.git",
+                "reference": "6caaa242a23bc39b4e3cf57304b5409260a7a346"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel/helpers/zipball/6caaa242a23bc39b4e3cf57304b5409260a7a346",
+                "reference": "6caaa242a23bc39b4e3cf57304b5409260a7a346",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.8.0|^6.0|^7.0|^8.0|^9.0|^10.0|^11.0",
+                "php": "^7.2.0|^8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^1.10",
+                "phpunit/phpunit": "^7.0|^8.0|^9.0|^10.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Taylor Otwell",
+                    "email": "taylor@laravel.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "email": "dries@laravel.com"
+                }
+            ],
+            "description": "Provides backwards compatibility for helpers in the latest Laravel release.",
+            "keywords": [
+                "helpers",
+                "laravel"
+            ],
+            "support": {
+                "source": "https://github.com/laravel/helpers/tree/v1.7.0"
+            },
+            "time": "2023-11-30T14:09:05+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -8448,11 +8623,14 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "intervention/image": 10
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^8.2.11"
+        "php": "^8.2.11",
+        "ext-gd": "*"
     },
     "platform-dev": [],
     "plugin-api-version": "2.3.0"

@@ -26,8 +26,21 @@ class Post extends Model
         'category' => '',
     );
 
+
+
     public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'category_posts', 'post_id', 'category_id');
     }
+
+    public function contentBlocks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(ContentBlock::class, 'content_block_post', 'post_id', 'content_block_id');
+    }
+
+    public function images(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Image::class, 'image_post', 'post_id', 'image_id');
+    }
 }
+
