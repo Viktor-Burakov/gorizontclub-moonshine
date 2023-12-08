@@ -13,6 +13,20 @@ return new class extends Migration
     {
         Schema::create('image_post', function (Blueprint $table) {
             $table->id();
+
+            $table->unsignedBigInteger('image_id');
+            $table->unsignedBigInteger('post_id');
+
+            $table->index('post_id', 'image_post_post_idx');
+            $table->index('image_id', 'image_post_image_idx');
+
+            $table->foreign('post_id', 'image_post_post_fk')
+                ->references('id')
+                ->on('posts');
+            $table->foreign('image_id', 'image_post_image_fk')
+                ->references('id')
+                ->on('images');
+
             $table->timestamps();
         });
     }

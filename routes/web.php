@@ -1,6 +1,12 @@
 <?php
 
+use App\Enums\PostEnum;
+use App\Models\Image;
+use App\Models\Post;
+use App\Services\ImageService;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,5 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
+
+
+
     return view('welcome');
 });
