@@ -24,10 +24,8 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
  protected function menu(): Closure|array
  {
      return [
-             MenuGroup::make('Посты', [
-                 MenuItem::make('Все', new PostResource())
-                     ->badge(fn() => Post::query()->count()),
-             ])->icon('heroicons.queue-list'),
+         MenuItem::make('Все посты', new PostResource())
+             ->badge(fn() => Post::query()->count()),
 
              MenuItem::make('Категории', new CategoryResource())
                  ->badge(fn() => Category::query()->count())->icon('heroicons.bars-2'),

@@ -2,6 +2,7 @@
 
 namespace App\MoonShine\Resources;
 
+use App\Enums\PostEnum;
 use App\Models\Post;
 use App\MoonShine\Fields\PostImage;
 use Carbon\Carbon;
@@ -11,9 +12,12 @@ use MoonShine\Decorations\Block;
 use MoonShine\Decorations\Column;
 use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Grid;
+use MoonShine\Enums\ClickAction;
 use MoonShine\Fields\Date;
 use MoonShine\Fields\Image;
+use MoonShine\Fields\Preview;
 use MoonShine\Fields\Relationships\BelongsToMany;
+use MoonShine\Fields\StackFields;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Fields\Textarea;
@@ -32,20 +36,25 @@ class PostResource extends ModelResource
     protected string $column = 'title';
     protected bool $showInModal = true;
 
+    protected ?ClickAction $clickAction = ClickAction::EDIT;
+
     public function fields(): array
     {
         return [
             Grid::make([
                 Column::make([
                     Block::make('SEO', [
-                        Text::make('Title', 'title')
-                            ->sortable()
-                            ->required(),
-                        PostImage::make(),
-                        Image::make('preview'),
-                        Text::make('url')
-                            ->required()
-                            ->hideOnIndex(),
+                        StackFields::make('Title')->fields([
+                            Text::make('Title', 'title')
+                                ->sortable()
+                                ->required(),
+                            Text::make('Url')
+                                ->required()
+                                ->badge('gray'),
+                        ]),
+                        Image::make('Preview')
+                            ->allowedExtensions(['jpg', 'png'])
+                            ->dir(PostEnum::POST_PREVIEW['dir']),
                         Textarea::make('Description (SEO)', 'description')->hideOnIndex(),
                     ]),
                 ])->columnSpan(12),
@@ -77,6 +86,7 @@ class PostResource extends ModelResource
                         BelongsToMany::make('Разделы', 'categories')
                             ->selectMode()
                             ->inLine(separator: ' ', badge: true),
+                        PostImage::make(),
                     ]),
                 ])->columnSpan(12),
             ]),
@@ -121,7 +131,7 @@ class PostResource extends ModelResource
     public function components(): array
     {
         return [
-         //   ChangeLogFormComponent::make('Change log'),
+            //   ChangeLogFormComponent::make('Change log'),
         ];
     }
 }
