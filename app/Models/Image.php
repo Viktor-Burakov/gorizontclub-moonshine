@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
 class Image extends Model
 {
@@ -11,13 +12,18 @@ class Image extends Model
     protected $table = 'images';
     protected $guarded = [];
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function categories(): MorphToMany
     {
-        return $this->belongsToMany(Post::class, 'image_post', 'image_id', 'post_id');
+        return $this->morphedByMany(Category::class, 'imageable');
     }
 
-    public function contentBlocks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function posts(): MorphToMany
     {
-        return $this->belongsToMany(ContentBlock::class, 'content_block_image', 'image_id', 'content_block_id');
+        return $this->morphedByMany(Post::class, 'imageable');
+    }
+
+    public function contentBlocks(): MorphToMany
+    {
+        return $this->morphedByMany(ContentBlock::class, 'imageable');
     }
 }

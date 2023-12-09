@@ -4,19 +4,26 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
+
 class ContentBlock extends Model
 {
     use HasFactory;
     protected $table = 'content_blocks';
     protected $guarded = [];
 
-    public function posts(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function categories(): MorphToMany
     {
-        return $this->belongsToMany(Post::class, 'content_block_post', 'content_block_id', 'post_id');
+        return $this->morphedByMany(Category::class, 'content_blockable');
     }
 
-    public function images(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function posts(): MorphToMany
     {
-        return $this->belongsToMany(Image::class, 'content_block_image', 'content_block_id', 'image_id');
+        return $this->morphedByMany(Post::class, 'content_blockable');
+    }
+
+    public function images(): MorphToMany
+    {
+        return $this->morphToMany(Image::class, 'imageable');
     }
 }

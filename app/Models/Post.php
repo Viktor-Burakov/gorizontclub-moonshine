@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Post extends Model
@@ -26,21 +28,19 @@ class Post extends Model
         'category' => '',
     );
 
-
-
-    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function categories(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class, 'category_posts', 'post_id', 'category_id');
+        return $this->belongsToMany(Category::class);
     }
 
-    public function contentBlocks(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function contentBlocks(): MorphToMany
     {
-        return $this->belongsToMany(ContentBlock::class, 'content_block_post', 'post_id', 'content_block_id');
+        return $this->morphToMany(ContentBlock::class, 'content_blockable');
     }
 
-    public function images(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function images(): MorphToMany
     {
-        return $this->belongsToMany(Image::class, 'image_post', 'post_id', 'image_id');
+        return $this->morphToMany(Image::class, 'imageable');
     }
 }
 
