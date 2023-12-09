@@ -7,11 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use MoonShine\ChangeLog\Traits\HasChangeLog;
 
 class Post extends Model
 {
     use HasFactory;
     use SoftDeletes;
+    use HasChangeLog;
 
     protected $table = 'posts';
     protected $guarded = [];
