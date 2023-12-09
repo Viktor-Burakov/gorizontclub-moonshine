@@ -50,8 +50,6 @@ class ImageSeeder extends Seeder
         });
 
         Post::all()->each(function ($post) use ($dirTestImages) {
-
-
             $sourceImagePath = storage_path('app/'. $dirTestImages.'images_test/') . $post->url . '.jpg';
 
             if (ImageService::createFakeImage($sourceImagePath, 1080, 1080, $post->title)) {
