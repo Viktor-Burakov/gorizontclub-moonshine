@@ -20,10 +20,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::group(['prefix' => 'admin'], function () {
     Route::group(['prefix' => 'contentBlock'], function () {
-//    Route::get('/{id?}', \App\Http\Controllers\API\Post\ShowController::class)
-//        ->where('id', '[0-9]+');
-//    Route::get('/category/{id}', \App\Http\Controllers\API\Category\ShowController::class)
-//        ->where('id', '[0-9]+');
-        Route::post('/', \App\Http\Controllers\API\Admin\ContentBlock\StoreController::class);
+        Route::post('/', \App\Http\Controllers\API\Admin\ContentBlock\StoreController::class)
+            ->name('content-block.store');
+    });
+    Route::group(['prefix' => 'image'], function () {
+        Route::post('/', \App\Http\Controllers\API\Admin\Image\StoreController::class)
+            ->name('image.store');
     });
 });
