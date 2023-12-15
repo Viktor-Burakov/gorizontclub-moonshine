@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
+use ReflectionClass;
 
 class ImageService
 {
@@ -24,7 +25,7 @@ class ImageService
     public function saveToJpgAndWebP(string $filePath): string
     {
         $this->saveToJpg($filePath);
-       // todo $this->saveToWebP($filePath);
+        // todo $this->saveToWebP($filePath);
         return $filePath;
     }
 
@@ -40,6 +41,21 @@ class ImageService
         $path = $filePath . '.webp';
         $this->image->toWebp(85)->save($path);
         return $path;
+    }
+
+    public static function generateThumbnails(
+        string $sourcePath,
+        string $slug,
+        $imageEnum = \App\Enums\ImageEnum::class
+    ): void {
+        $thumbnailsEnums = new ReflectionClass($imageEnum);
+
+        foreach ($thumbnailsEnums->getConstants() as $thumbnailOption) {
+            $path = storage_path('app/public/' . $thumbnailOption['dir'] . $slug);
+            $thumbnail = new ImageService($sourcePath);
+            $thumbnail->resize($thumbnailOption['width']);
+            $thumbnail->saveToJpgAndWebP($path);
+        }
     }
 
     public static function createFakeImage(string $path, int $x, int $y, string $text = ''): bool
