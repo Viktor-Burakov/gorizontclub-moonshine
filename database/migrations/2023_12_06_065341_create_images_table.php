@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('name');
             $table->string('alt')->nullable();
-            $table->string('url')->nullable();
+            $table->string('slug')->nullable();
             $table->string('path')->nullable();
             $table->timestamps();
         });

@@ -54,13 +54,13 @@ class ContentBlockResource extends ModelResource
                 ->creatable()
                 ->inLine(separator: ' ', badge: true)
                 ->withImage(
-                    'url',
+                    'slug',
                     'public',
                     ImageEnum::GALLERY_PREVIEW['dir']
                 )
                 ->hideOnIndex(),
             MorphToMany::make('Изображения', 'images', function ($item) {
-                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->url) . '">'
+                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->slug) . '">'
                     . '<small>' . $item->name . '</small>';
             })
                 ->inLine(separator: ' ', badge: false)
@@ -74,7 +74,7 @@ class ContentBlockResource extends ModelResource
                 ->selectMode(),
 
             MorphToMany::make('Изображения', 'images', function ($item) {
-                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->url) . '">'
+                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->slug) . '">'
                     . '<small>' . $item->name . '</small>';
             })
                 ->associatedWith('content_block_id'),

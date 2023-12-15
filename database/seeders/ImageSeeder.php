@@ -21,8 +21,8 @@ class ImageSeeder extends Seeder
             ->create();
 
         $dirTestImages = 'public/';
-        Storage::deleteDirectory($dirTestImages.'images_test/');
-        Storage::makeDirectory($dirTestImages.'images_test/');
+        Storage::deleteDirectory($dirTestImages . 'images_test/');
+        Storage::makeDirectory($dirTestImages . 'images_test/');
         Storage::makeDirectory($dirTestImages . PostEnum::POST_PREVIEW['dir']);
         $thumbnailsEnums = new ReflectionClass('App\Enums\ImageEnum');
 
@@ -31,8 +31,7 @@ class ImageSeeder extends Seeder
         }
 
         Image::all()->each(function ($image) use ($dirTestImages, $thumbnailsEnums) {
-
-            $sourceImagePath = storage_path('app/'. $dirTestImages.'images_test/') . $image->path . '.jpg';
+            $sourceImagePath = storage_path('app/' . $dirTestImages . 'images_test/') . $image->path . '.jpg';
 
             if (ImageService::createFakeImage(
                 $sourceImagePath,
@@ -50,16 +49,14 @@ class ImageSeeder extends Seeder
         });
 
         Post::all()->each(function ($post) use ($dirTestImages) {
-            $sourceImagePath = storage_path('app/'. $dirTestImages.'images_test/') . $post->url . '.jpg';
+            $sourceImagePath = storage_path('app/' . $dirTestImages . 'images_test/') . $post->slug . '.jpg';
 
             if (ImageService::createFakeImage($sourceImagePath, 1080, 1080, $post->title)) {
-                $path = storage_path('app/' . $dirTestImages . PostEnum::POST_PREVIEW['dir'] . $post->url);
+                $path = storage_path('app/' . $dirTestImages . PostEnum::POST_PREVIEW['dir'] . $post->slug);
                 $thumbnail = new ImageService($sourceImagePath);
                 $thumbnail->resize(PostEnum::POST_PREVIEW['width']);
                 $thumbnail->saveToJpgAndWebP($path);
             };
         });
-
-
     }
 }

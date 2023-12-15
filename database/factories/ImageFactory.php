@@ -17,12 +17,12 @@ class ImageFactory extends Factory
     public function definition(): array
     {
         $name = fake()->city . ' | ' . fake()->streetName() . ' | ' . fake()->date;
-        $url = str_slug($name);
+        $slug = str_slug($name);
         return [
             'name' => $name,
             'alt' => $name,
-            'path' => $url,
-            'url' => $url.'.jpg',
+            'path' => $slug,
+            'slug' => $slug . '.jpg',
         ];
     }
 }

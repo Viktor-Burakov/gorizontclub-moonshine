@@ -20,7 +20,7 @@ class CategoryFactory extends Factory
         return [
             'active' => 1,
             'title' => $name,
-            'url' => $name,
+            'slug' => $name,
         ];
     }
 }

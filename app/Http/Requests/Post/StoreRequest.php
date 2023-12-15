@@ -25,7 +25,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => 'string',
-            'url' => 'string',
+            'slug' => 'string',
             'date_start' => 'nullable|string',
             'date_end' => 'nullable|string',
             'preview_text' => 'nullable|string',

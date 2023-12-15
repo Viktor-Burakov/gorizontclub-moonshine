@@ -34,7 +34,7 @@ class StoreController extends Controller
                 ImageService::generateThumbnails($imageFile->path(), $slug);
 
                 $image->path = $slug . '.jpg';
-                $image->url = $slug . '.jpg';
+                $image->slug = $slug . '.jpg';
                 $image->save();
                 $image->posts()->attach($data['post_id']);
                 if (!empty($data['content_block_id'])) {

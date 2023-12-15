@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -15,7 +14,7 @@ return new class extends Migration
             $table->id();
             $table->timestamps();
             $table->boolean('active')->default(0);
-            $table->string('url')->nullable()->unique();
+            $table->string('slug')->nullable()->unique();
             $table->string('title')->nullable();
             $table->string('h1')->nullable();
             $table->string('description')->nullable();

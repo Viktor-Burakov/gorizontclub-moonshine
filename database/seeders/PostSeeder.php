@@ -6,7 +6,6 @@ use App\Models\ContentBlock;
 use App\Models\Image;
 use App\Models\Post;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
 class PostSeeder extends Seeder
 {
@@ -24,7 +23,7 @@ class PostSeeder extends Seeder
             ->create([
                 'active' => 1,
                 'title' => 'post1',
-                'url' => 'post1',
+                'slug' => 'post1',
                 'h1' => 'post1 - h1',
                 'date_start' => fake()->dateTimeBetween('next Friday', 'next Friday +3 days'),
                 'date_end' => fake()->dateTimeBetween('next Friday +4 days', 'next Friday +10 days'),
@@ -39,7 +38,7 @@ class PostSeeder extends Seeder
             ->create([
                 'active' => 1,
                 'title' => 'post2',
-                'url' => 'post2',
+                'slug' => 'post2',
                 'h1' => 'post2- h1',
                 'date_start' => fake()->dateTimeBetween('next Friday', 'next Friday +3 days'),
                 'date_end' => fake()->dateTimeBetween('next Friday +4 days', 'next Friday +10 days'),
@@ -54,7 +53,7 @@ class PostSeeder extends Seeder
             ->create([
                 'active' => 1,
                 'title' => 'post3',
-                'url' => 'post3',
+                'slug' => 'post3',
                 'h1' => 'post3- h1',
                 'date_start' => fake()->dateTimeBetween('next Friday', 'next Friday +3 days'),
                 'date_end' => fake()->dateTimeBetween('next Friday +4 days', 'next Friday +10 days'),
@@ -69,7 +68,7 @@ class PostSeeder extends Seeder
             ->create([
                 'active' => 1,
                 'title' => 'post4',
-                'url' => 'post4',
+                'slug' => 'post4',
                 'h1' => 'post4- h1',
                 'date_start' => fake()->dateTimeBetween('next Friday', 'next Friday +3 days'),
                 'date_end' => fake()->dateTimeBetween('next Friday +4 days', 'next Friday +10 days'),

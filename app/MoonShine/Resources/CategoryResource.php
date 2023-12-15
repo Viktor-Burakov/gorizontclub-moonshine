@@ -22,6 +22,7 @@ class CategoryResource extends ModelResource
     protected bool $detailInModal = true;
 
     protected ?ClickAction $clickAction = ClickAction::EDIT;
+
     public function fields(): array
     {
         return [
@@ -29,7 +30,7 @@ class CategoryResource extends ModelResource
             Text::make('Title', 'title')
                 ->sortable()
                 ->required(),
-            Text::make('url')->required(),
+            Text::make('slug')->required(),
             PostImage::make('preview'),
             Text::make('preview_alt')
                 ->hideOnIndex(),
@@ -57,6 +58,7 @@ class CategoryResource extends ModelResource
 
         ];
     }
+
     protected function onBoot(): void
     {
         $this->getPages()

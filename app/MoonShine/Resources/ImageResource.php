@@ -35,7 +35,7 @@ class ImageResource extends ModelResource
             Text::make('Название', 'name')
                 ->required(),
             Text::make('Alt', 'alt'),
-            Image::make('Превью', 'url')
+            Image::make('Превью', 'slug')
                 ->dir(ImageEnum::GALLERY_PREVIEW['dir']),
             Date::make('Добавлено', 'created_at'),
             MorphToMany::make(
