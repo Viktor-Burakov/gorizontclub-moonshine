@@ -2,7 +2,10 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework"],
+    "keywords": [
+        "laravel",
+        "framework"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.2.11",
@@ -17,11 +20,13 @@
         "moonshine/moonshine": "^2.3.0"
     },
     "require-dev": {
+        "barryvdh/laravel-debugbar": "^3.9",
         "barryvdh/laravel-ide-helper": "^2.13",
         "doctrine/dbal": "3.7.2",
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^1.0",
         "laravel/sail": "^1.18",
+        "laravel/telescope": "^4.17",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^7.0",
         "phpunit/phpunit": "^10.1",
@@ -40,6 +45,9 @@
         }
     },
     "scripts": {
+        "serve": [
+            "php artisan serve --host=gorizontclub --port=80"
+        ],
         "ide": [
             "php artisan ide-helper:generate",
             "php artisan ide-helper:models -N",
