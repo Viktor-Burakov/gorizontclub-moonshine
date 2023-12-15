@@ -4,19 +4,20 @@ namespace App\MoonShine\Resources;
 
 use App\Enums\PostEnum;
 use App\Models\Post;
-use App\MoonShine\Fields\PostImage;
 use Carbon\Carbon;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\ChangeLog\Components\ChangeLog;
 use MoonShine\Decorations\Block;
 use MoonShine\Decorations\Column;
 use MoonShine\Decorations\Flex;
 use MoonShine\Decorations\Grid;
 use MoonShine\Enums\ClickAction;
+use MoonShine\Enums\Layer;
 use MoonShine\Fields\Date;
+use MoonShine\Fields\DateRange;
 use MoonShine\Fields\Image;
-use MoonShine\Fields\Preview;
-use MoonShine\Fields\Relationships\BelongsToMany;
+use MoonShine\Fields\Relationships\MorphToMany;
 use MoonShine\Fields\StackFields;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
@@ -29,14 +30,56 @@ class PostResource extends ModelResource
     protected string $model = Post::class;
 
     protected string $title = 'Посты';
-    protected int $itemsPerPage = 20;
+    //  protected int $itemsPerPage = 20;
     protected string $sortColumn = 'date_start';
-    protected string $orderType = 'asc';
-    protected array $activeActions = ['create', 'show', 'edit', 'delete'];
+    protected string $sortDirection = 'ASC';
+
     protected string $column = 'title';
-    protected bool $showInModal = true;
+    protected bool $detailInModal = true;
+
+    protected array $with = ['categories'];
+
 
     protected ?ClickAction $clickAction = ClickAction::EDIT;
+
+    public function rules(Model $item): array
+    {
+        return [];
+    }
+
+    public function queryTags(): array
+    {
+        return [
+            QueryTag::make(
+                'Опубликованы',
+                fn(Builder $query) => $query->where('active', 1)
+            )->icon('heroicons.eye'),
+            QueryTag::make(
+                'Черновик',
+                fn(Builder $query) => $query->where('active', 0)
+            )->icon('heroicons.pencil-square'),
+
+        ];
+    }
+
+    public function search(): array
+    {
+        return ['id'];
+    }
+
+    public function filters(): array
+    {
+        return [
+            DateRange::make('date_start'),
+            DateRange::make('date_end'),
+            MorphToMany::make('Categories')
+        ];
+    }
+
+    public function getActiveActions(): array
+    {
+        return ['create', 'view', 'update', 'delete', 'massDelete'];
+    }
 
     public function fields(): array
     {
@@ -83,55 +126,29 @@ class PostResource extends ModelResource
                         })
                             ->sortable()
                             ->hideOnForm(),
-                        BelongsToMany::make('Разделы', 'categories')
+                        MorphToMany::make('Разделы', 'categories')
                             ->selectMode()
                             ->inLine(separator: ' ', badge: true),
-                        PostImage::make(),
+                        // todo     PostImage::make(),
                     ]),
                 ])->columnSpan(12),
             ]),
         ];
     }
 
-    public function rules(Model $item): array
-    {
-        return [];
-    }
-
-    public function queryTags(): array
-    {
-        return [
-            QueryTag::make(
-                'Опубликованы',
-                fn(Builder $query) => $query->where('active', 1)
-            )->icon('heroicons.eye'),
-            QueryTag::make(
-                'Черновик',
-                fn(Builder $query) => $query->where('active', 0)
-            )->icon('heroicons.pencil-square'),
-
-        ];
-    }
-
-    public function search(): array
-    {
-        return ['id'];
-    }
-
-    public function filters(): array
-    {
-        return [
-            Text::make('date_start'),
-            Text::make('date_end'),
-            BelongsToMany::make('Categories')
-        ];
-    }
-
-
     public function components(): array
     {
         return [
-            //   ChangeLogFormComponent::make('Change log'),
         ];
+    }
+
+    protected function onBoot(): void
+    {
+        $this->getPages()
+            ->formPage()
+            ->pushToLayer(
+                Layer::BOTTOM,
+                ChangeLog::make('Changelog', $this)
+            );
     }
 }

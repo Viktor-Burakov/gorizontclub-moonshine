@@ -5,6 +5,9 @@ namespace App\MoonShine\Resources;
 use App\Models\Category;
 use App\MoonShine\Fields\PostImage;
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\ChangeLog\Components\ChangeLog;
+use MoonShine\Enums\ClickAction;
+use MoonShine\Enums\Layer;
 use MoonShine\Fields\Switcher;
 use MoonShine\Fields\Text;
 use MoonShine\Resources\ModelResource;
@@ -14,10 +17,11 @@ class CategoryResource extends ModelResource
     protected string $model = Category::class;
 
     protected string $title = 'Категории';
-    protected array $activeActions = ['create', 'show', 'edit', 'delete'];
-    protected string $column = 'title';
-    protected bool $showInModal = true;
 
+    protected string $column = 'title';
+    protected bool $detailInModal = true;
+
+    protected ?ClickAction $clickAction = ClickAction::EDIT;
     public function fields(): array
     {
         return [
@@ -50,7 +54,16 @@ class CategoryResource extends ModelResource
     public function components(): array
     {
         return [
-        //    ChangeLogFormComponent::make('Change log'),
+
         ];
+    }
+    protected function onBoot(): void
+    {
+        $this->getPages()
+            ->formPage()
+            ->pushToLayer(
+                Layer::BOTTOM,
+                ChangeLog::make('Changelog', $this)
+            );
     }
 }
