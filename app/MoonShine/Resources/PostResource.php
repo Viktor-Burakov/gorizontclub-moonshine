@@ -91,7 +91,7 @@ class PostResource extends ModelResource
                             Text::make('Title', 'title')
                                 ->sortable()
                                 ->required(),
-                            Text::make('Url')
+                            Text::make('Slug')
                                 ->required()
                                 ->badge('gray'),
                         ]),

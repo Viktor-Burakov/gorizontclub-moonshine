@@ -1,14 +1,10 @@
 <?php
 
-namespace App\Http\Requests\ContentBlock;
+namespace App\Http\Requests\Image;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
-/**
- * @property mixed $name
- */
-class StoreRequest extends FormRequest
+class ImageStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,10 +22,10 @@ class StoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'post_id' => 'required|integer',
-            'name' => 'string',
-            'title' => 'nullable|string',
-            'description' => 'nullable|string',
+            'post_id' => '',
+            'content_block_id' => 'integer|nullable',
+            'content_block_title' => 'string|nullable',
+            'images' => 'array',
         ];
     }
 }

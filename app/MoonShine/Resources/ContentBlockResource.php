@@ -16,7 +16,7 @@ use MoonShine\Fields\DateRange;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Relationships\MorphToMany;
 use MoonShine\Fields\Text;
-use MoonShine\Fields\TinyMce;
+use MoonShine\Fields\Textarea;
 use MoonShine\Resources\ModelResource;
 
 class ContentBlockResource extends ModelResource
@@ -39,7 +39,7 @@ class ContentBlockResource extends ModelResource
                 ->required(),
             Text::make('Заголовок H2', 'title')
                 ->required(),
-            TinyMce::make('Текст', 'description')
+            Textarea::make('Текст', 'description')
                 ->hideOnIndex(),
             Date::make('Добавлено', 'created_at')
                 ->readonly()
@@ -73,11 +73,11 @@ class ContentBlockResource extends ModelResource
             )
                 ->selectMode(),
 
-            MorphToMany::make('Изображения', 'images', function ($item) {
-                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->slug) . '">'
-                    . '<small>' . $item->name . '</small>';
-            })
-                ->associatedWith('content_block_id'),
+//            MorphToMany::make('Изображения', 'images', function ($item) {
+//                return '<img alt="" src="' . Storage::url(ImageEnum::GALLERY_PREVIEW['dir'] . $item->slug) . '">'
+//                    . '<small>' . $item->name . '</small>';
+//            })
+//                ->associatedWith('content_block_id'),
 
 
         ];

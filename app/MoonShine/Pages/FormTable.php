@@ -31,8 +31,8 @@ class FormTable extends Page
     {
         return [
             Block::make([
-                ContentBlockForm::render('1'),
-                ImageForm::render('1', '1', 'contentBlockName')
+                ContentBlockForm::make('1'),
+                ImageForm::make('1', '1', 'contentBlockName')
             ]),
             TableBuilder::make()
                 ->fields(fn() => [

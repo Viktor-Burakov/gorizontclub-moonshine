@@ -111,7 +111,7 @@ function upload(inputId, options = {}) {
 document.addEventListener('DOMContentLoaded', function () {
 
     upload(
-        'content-block-images',
+        'content_block_images',
     )
 
 

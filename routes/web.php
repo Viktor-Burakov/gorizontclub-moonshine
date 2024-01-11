@@ -1,12 +1,7 @@
 <?php
 
-use App\Enums\PostEnum;
-use App\Models\Image;
-use App\Models\Post;
-use App\Services\ImageService;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,9 +14,15 @@ use Illuminate\Support\Facades\Storage;
 |
 */
 
-Route::get('/', function () {
+Route::get('/', action: HomeController::class)
+    ->name('home');
 
 
-
-    return view('welcome');
+Route::group(['prefix' => 'post'], function () {
+    Route::get('/create', App\Http\Controllers\Post\CreateController::class)
+        ->name('post.create');
+    Route::get('/', App\Http\Controllers\Post\CreateController::class)
+        ->name('post.create');
+    Route::get('/{post}', [\App\Http\Controllers\API\Admin\PostController::class, 'edit'])
+        ->name('post.edit');
 });

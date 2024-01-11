@@ -12,8 +12,6 @@ use App\MoonShine\Resources\ContentBlockResource;
 use App\MoonShine\Resources\ImageResource;
 use App\MoonShine\Resources\PostResource;
 use Closure;
-use Illuminate\Support\ServiceProvider;
-use MoonShine\MoonShine;
 use MoonShine\Menu\MenuGroup;
 use MoonShine\Menu\MenuItem;
 use MoonShine\Providers\MoonShineApplicationServiceProvider;
@@ -47,6 +45,7 @@ class MoonShineServiceProvider extends MoonShineApplicationServiceProvider
                     ->icon('heroicons.bookmark'),
             ])->translatable(),
             MenuItem::make('FormTable', new FormTable()),
+            MenuItem::make('Add post', fn() => route('post.create')),
         ];
     }
 }

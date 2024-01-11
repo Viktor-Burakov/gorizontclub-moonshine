@@ -2,21 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Controllers\API\Admin\Image;
+namespace App\Http\Controllers\API\Admin;
 
+use App\Actions\Post\PostCreateOrUpdateAction;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Image\StoreRequest;
+use App\Http\Requests\Image\ImageStoreRequest;
+use App\Http\Requests\Post\StoreRequest;
 use App\Models\Image;
 use App\Services\ImageService;
 use Symfony\Component\HttpFoundation\Response;
 
-
-class StoreController extends Controller
+class ImageController extends Controller
 {
-    public function __invoke(StoreRequest $request): Response
+    public function edit(string $postId)
+    {
+    }
+
+    public function store(ImageStoreRequest $request): Response
     {
         $data = $request->validated();
-
+        dump($request);
+        dd($data);
         foreach ($data['images'] as $imageFile) {
             if ($imageFile->isValid()) {
                 if (!empty($data['content_block_id'])) {
@@ -44,5 +50,14 @@ class StoreController extends Controller
         }
 
         return response()->json(['message' => ['Изображения добавлены!']]);
+    }
+
+    public function update(StoreRequest $request, PostCreateOrUpdateAction $action)
+    {
+    }
+
+    public function destroy(string $id)
+    {
+        //
     }
 }

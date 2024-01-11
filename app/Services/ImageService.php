@@ -31,14 +31,22 @@ class ImageService
 
     public function saveToJpg(string $filePath): string
     {
+        if (str_contains($filePath, '.')) {
+            $filePath = strstr($filePath, '.', true);
+        }
         $path = $filePath . '.jpg';
+
         $this->image->toJpeg()->save($path);
         return $path;
     }
 
     public function saveToWebP(string $filePath): string
     {
+        if (str_contains($filePath, '.')) {
+            $filePath = strstr($filePath, '.', true);
+        }
         $path = $filePath . '.webp';
+
         $this->image->toWebp(85)->save($path);
         return $path;
     }
@@ -52,6 +60,7 @@ class ImageService
 
         foreach ($thumbnailsEnums->getConstants() as $thumbnailOption) {
             $path = storage_path('app/public/' . $thumbnailOption['dir'] . $slug);
+
             $thumbnail = new ImageService($sourcePath);
             $thumbnail->resize($thumbnailOption['width']);
             $thumbnail->saveToJpgAndWebP($path);

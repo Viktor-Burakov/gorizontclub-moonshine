@@ -24,15 +24,17 @@ class StoreRequest extends FormRequest
     public function rules()
     {
         return [
+            'id' => 'nullable|integer',
             'title' => 'string',
             'slug' => 'string',
+            'description' => 'nullable|string',
             'date_start' => 'nullable|string',
             'date_end' => 'nullable|string',
             'preview_text' => 'nullable|string',
-            'H1' => 'string',
-            'preview' => 'nullable|string',
+            'h1' => 'string',
+            'preview' => 'nullable|mimes:jpeg,png,jpg,gif|max:7000',
             'preview_alt' => 'nullable|string',
-            'category' => '',
+            'categories' => 'nullable|array',
         ];
     }
 }

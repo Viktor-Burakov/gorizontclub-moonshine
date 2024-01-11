@@ -14,8 +14,10 @@ class Category extends Model
     use HasFactory;
     use HasChangeLog;
     use SoftDeletes;
+
     protected $table = 'categories';
     protected $guarded = [];
+    protected $hidden = ['pivot'];
 
     public function posts(): BelongsToMany
     {
