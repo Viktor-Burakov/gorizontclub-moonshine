@@ -4,132 +4,130 @@
         <ProgressSpinner/>
     </div>
 
-    <div class="p-buttonset my-5">
-        <Button label="Сохранить пост" @click="update" class="w-11/12"/>
-        <Button @click="deletePost" class="w-1/12"
-                icon="pi pi-times" severity="danger" aria-label="Cancel"/>
-    </div>
-
-
-    <div class="flex justify-center">
-        <Button label="Новый блок" outlined @click="addContentBlock()" class="w-10/12"/>
-    </div>
-
-    <draggable
-        :list="post.content_blocks"
-        class="list-group flip-list"
-        :component-data="{
-          type: 'transition-group',
-        }"
-        v-bind="dragOptions"
-        ghostClass="ghost"
-        animation="400"
-        group="CB"
-        handle=".handle"
-        item-key="id"
-    >
-        <template #item="{ element, index }">
-            <div class="list-group-item">
-
-                <Panel>
-                    <template #header>
-                        <div class="flex items-center gap-5 handle cursor-move">
-                            <i class="pi pi-align-justify text-5xl" style="color: var(--primary-color)"></i>
-                            <div>
-                                <div>
-                                    <Badge :value="index"></Badge>
-                                </div>
-                                <div class="mt-2" v-if="element.id">#{{ element.id }}</div>
-                            </div>
-
-                            <div>{{ element.name }}</div>
-                        </div>
-                    </template>
-                    <template #icons>
-                        <Button @click="removeContentBlock(index)"
-                                icon="pi pi-times" severity="danger" outlined aria-label="Cancel"/>
-                    </template>
-
-                    <content-block-create-or-edit
-                        :content_block="element"
-                    />
-
-                    <template #footer>
-                        <draggable
-                            :list="element.images"
-                            class="list-group flip-list image-gallery mb-5"
-                            v-bind="dragOptions"
-                            group="CBImages"
-                            handle=".handle"
-                            item-key="id"
-                        >
-                            <template #item="{ element, index }">
-                                <div class="list-group-item">
-                                    {{ post.image_models[element.id].name }}<br>
-                                    {{ post.image_models[element.id].alt }}<br>
-                                    {{ post.image_models[element.id].slug }}<br>
-                                    <image-preview
-                                        :image="post.image_models[element.id]"
-                                        :editImageId="editImageId"
-                                        @edit-image="changeEditImageId"
-                                    />
-                                </div>
-                            </template>
-                        </draggable>
-                        <div style="height: 50px" class="border-2 border-dashed surface-border"></div>
-                    </template>
-                </Panel>
-
-
-                <div class="flex justify-center">
-                    <Button label="Новый блок" outlined @click="addContentBlock(index)" class="w-10/12"/>
-                </div>
-            </div>
-        </template>
-    </draggable>
-
-
-    <div class="p-buttonset my-5">
-        <Button label="Сохранить пост" @click="update" class="w-11/12"/>
-        <Button @click="deletePost" class="w-1/12"
-                icon="pi pi-times" severity="danger" aria-label="Cancel"/>
-    </div>
-
-
-    <draggable
-        tag="div"
-        :list="post.images"
-        class="list-group image-gallery mb-5"
-        group="Image"
-        handle=".handle"
-        item-key="id"
-    >
-        <template #item="{ element, index }">
-            <div class="list-group-item">
-                {{ post.image_models[element.id].name }}<br>
-                {{ post.image_models[element.id].alt }}<br>
-                {{ post.image_models[element.id].slug }}<br>
-                <image-preview
-                    :image="post.image_models[element.id]"
-                    :editImageId="editImageId"
-                    @edit-image="changeEditImageId"
-                />
-            </div>
-        </template>
-    </draggable>
-
     <image-edit
-        :image="post.image_models[editImageId]"
+        :image="images[editImageId]"
         :isEditImage="isEditImage"
         @edit-image-close="editImageClose"
     />
+
+    <div class="p-buttonset my-5">
+        <Button label="Сохранить пост" @click="update" class="w-11/12"/>
+        <Button @click="deletePost" class="w-1/12"
+                icon="pi pi-times" severity="danger" aria-label="Cancel"/>
+    </div>
+
+
+        <div class="flex justify-center">
+            <Button label="Новый блок" outlined @click="addContentBlock()" class="w-10/12"/>
+        </div>
+
+        <draggable
+            :list="post.content_blocks"
+            class="list-group flip-list"
+            :component-data="{
+              type: 'transition-group',
+            }"
+            v-bind="dragOptions"
+            ghostClass="ghost"
+            animation="400"
+            group="CB"
+            handle=".handle"
+            item-key="id"
+        >
+            <template #item="{ element, index }">
+                <div class="list-group-item">
+
+                    <Panel>
+                        <template #header>
+                            <div class="flex items-center gap-5 handle cursor-move">
+                                <i class="pi pi-align-justify text-5xl" style="color: var(--primary-color)"></i>
+                                <div>
+                                    <div>
+                                        <Badge :value="index"  class="mb-2"></Badge>
+                                    </div>
+                                    <div v-if="element.id">#{{ element.id }}</div>
+                                    <Badge v-else value="NEW" severity="success"></Badge>
+                                </div>
+                                <div>{{ element.name }}</div>
+                            </div>
+                        </template>
+                        <template #icons>
+                            <Button @click="removeContentBlock(index)"
+                                    icon="pi pi-times" severity="danger" outlined aria-label="Cancel"/>
+                        </template>
+
+                        <content-block-create-or-edit
+                            :content_block="element"
+                            :contentBlocks="contentBlocks"
+                        />
+
+                        <template #footer>
+                            <draggable
+                                :list="element.images"
+                                class="list-group flip-list image-gallery mb-5"
+                                v-bind="dragOptions"
+                                group="CBImages"
+                                handle=".handle"
+                                item-key="id"
+                            >
+                                <template #item="{ element, index }">
+                                    <div class="list-group-item">
+                                        <image-preview
+                                            :image="images[element.id]"
+                                            :editImageId="editImageId"
+                                            @edit-image="changeEditImageId"
+                                        />
+                                    </div>
+                                </template>
+                            </draggable>
+
+                        </template>
+                    </Panel>
+
+
+                    <div class="flex justify-center">
+                        <Button label="Новый блок" outlined @click="addContentBlock(index)" class="w-10/12"/>
+                    </div>
+                </div>
+            </template>
+        </draggable>
+
+
+        <div class="p-buttonset my-5">
+            <Button label="Сохранить пост" @click="update" class="w-11/12"/>
+            <Button @click="deletePost" class="w-1/12"
+                    icon="pi pi-times" severity="danger" aria-label="Cancel"/>
+        </div>
+
+    <div style="height: 50px" class="border-2 border-dashed surface-border"></div>
+
+        <draggable
+            tag="div"
+            :list="post.images"
+            class="list-group image-gallery mb-5"
+            group="Image"
+            handle=".handle"
+            item-key="id"
+        >
+            <template #item="{ element, index }">
+                <div class="list-group-item">
+                                <image-preview
+                        :image="images[element.id]"
+                        :editImageId="editImageId"
+                        @edit-image="changeEditImageId"
+                    />
+                </div>
+            </template>
+        </draggable>
+
+
 
 </template>
 
 <script>
 
 import draggable from "vuedraggable";
-import {getPost, updatePost} from "@/src/api/api";
+import {getPost, updatePost, getCategories, getContentBlocks, getImages} from "@/src/api/api";
 import ContentBlockCreateOrEdit from "@/src/components/contentBlock/ContentBlockCreateOrEdit.vue";
 import ImagePreview from "@/src/components/image/ImagePreview.vue";
 import ImageEdit from "@/src/components/image/ImageEdit.vue";
@@ -147,9 +145,12 @@ export default {
             post: {
                 id: null,
                 content_blocks: null,
-                image_models: [],
-
             },
+
+            categories: [],
+            contentBlocks: null,
+            images: [],
+
             dragging: false,
             isLoading: false,
             editImageId: null,
@@ -159,15 +160,18 @@ export default {
     },
     mounted() {
         this.isLoading = true
+
         getPost(6)
             .then((res) => {
-                this.post = res.data
+                this.categories = res.data.categories
+                this.contentBlocks = Object.values(res.data.contentBlocks)
+                this.images = res.data.images
+                this.post = res.data.post
             }).catch((err) => {
-            this.$toast.add({severity: 'error', summary: 'Ошибка', detail: err.message, life: 5000});
+            this.$toast.add({severity: 'error', summary: 'Ошибка getPost', detail: err.message, life: 5000});
         }).finally(() => {
             this.isLoading = false
-        })
-
+        });
     },
     computed: {
         draggingInfo() {
@@ -200,11 +204,13 @@ export default {
                         detail: this.post.title,
                         life: 3000
                     });
-                }).catch((err) => {
-                this.$toast.add({severity: 'error', summary: 'Ошибка', detail: err.message, life: 5000});
-            }).finally(() => {
-                this.isLoading = false
-            })
+                })
+                .catch((err) => {
+                    this.$toast.add({severity: 'error', summary: 'Ошибка', detail: err.message, life: 5000});
+                })
+                .finally(() => {
+                    this.isLoading = false
+                })
         },
         deletePost() {
             const id = 154

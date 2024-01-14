@@ -17,9 +17,12 @@ export function getCategories() {
 }
 
 export function getContentBlocks() {
-    return axios.get(`/api/admin/category/`)
+    return axios.get(`/api/admin/content-block/`)
 }
 
+export function getContentBlock(id) {
+    return axios.get(`/api/admin/content-block/${id}`)
+}
 export function getImages() {
-    return axios.get(`/api/admin/category/`)
+    return axios.get(`/api/admin/image/`)
 }

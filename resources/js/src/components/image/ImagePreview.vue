@@ -17,7 +17,6 @@ export default {
     name: "ImagePreview",
     data() {
         return {
-            editId: null,
             url: '',
         }
     },

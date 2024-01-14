@@ -4,16 +4,23 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\API\Admin;
 
+use App\Actions\ContentBlock\ContentBlockIndexAction;
+use App\Actions\Image\ImageIndexAction;
 use App\Actions\Post\PostCreateOrUpdateAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Image\ImageStoreRequest;
 use App\Http\Requests\Post\StoreRequest;
 use App\Models\Image;
 use App\Services\ImageService;
+use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 class ImageController extends Controller
 {
+    public function index(ImageIndexAction $action): JsonResponse
+    {
+        return response()->json($action->handle());
+    }
     public function edit(string $postId)
     {
     }

@@ -45,11 +45,21 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
 
-    Route::group(['prefix' => 'contentBlock'], function () {
+    Route::group(['prefix' => 'content-block'], function () {
+
+        Route::get('/', [ContentBlockController::class, 'index'])
+            ->name('content-block.index');
+
+        Route::get('/{id}', [ContentBlockController::class, 'edit'])
+            ->name('content-block.edit')
+            ->where(['id' => '[0-9]+']);
+
         Route::post('/', [ContentBlockController::class, 'store'])
             ->name('content-block.store');
     });
     Route::group(['prefix' => 'image'], function () {
+        Route::get('/', [ImageController::class, 'index'])
+            ->name('image.index');
         Route::post('/', [ImageController::class, 'store'])
             ->name('image.store');
     });

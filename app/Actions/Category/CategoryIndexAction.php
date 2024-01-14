@@ -12,6 +12,6 @@ class CategoryIndexAction
 {
     public function handle(): Collection
     {
-        return Category::all(['id', 'title']);
+        return Category::all(['id', 'title'])->keyBy('id');
     }
 }
