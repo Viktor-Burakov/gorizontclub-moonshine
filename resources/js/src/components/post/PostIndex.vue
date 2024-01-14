@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import {getPosts} from '@/src/api/posts'
+import {getPosts} from '@/src/api/api'
 
 export default {
     name: "PostIndex",

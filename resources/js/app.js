@@ -31,6 +31,7 @@ import Inplace from "primevue/inplace";
 import ProgressSpinner from "primevue/progressspinner";
 import Dialog from "primevue/dialog";
 import Badge from "primevue/badge";
+import Dropdown from "primevue/dropdown";
 
 const app = createApp(App)
 app.use(PrimeVue, {
@@ -62,5 +63,6 @@ app.component('Inplace', Inplace)
 app.component('ProgressSpinner', ProgressSpinner)
 app.component('Dialog', Dialog)
 app.component('Badge', Badge)
+app.component('Dropdown', Dropdown)
 
 app.mount('#app')

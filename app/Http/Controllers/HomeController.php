@@ -12,12 +12,10 @@ class HomeController extends Controller
 {
     public function __invoke(): View
     {
-        $posts = Post::query()
-            ->with(['categories'])
-            ->get();
+
 
         return view('welcome', [
-            'posts' => $posts,
+
         ]);
     }
 }

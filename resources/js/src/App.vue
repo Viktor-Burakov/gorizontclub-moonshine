@@ -2,7 +2,6 @@
     <post-create-or-edit></post-create-or-edit>
 
     <post-index></post-index>
-
 </template>
 
 <script setup>

@@ -1,68 +1,67 @@
 <template>
-    <Panel>
-        <template #header>
-            <div class="flex align-items-center gap-3">
-                <Badge :value="index"></Badge>
-                {{ data.title }}
-            </div>
-
-        </template>
-        <div class="flex flex-wrap  gap-3">
-            <div class="grow">
-                        <span class="p-float-label input-item">
-                    <InputText id="name" v-model="data.name" class="w-full min-w-max"/>
-                    <label for="name">Имя в базе (не отображается)</label>
-                </span>
-            </div>
-            <div class="grow">
-                        <span class="p-float-label input-item">
-                    <InputText id="title" v-model="data.title" class="w-full min-w-max"/>
-                    <label for="title">Title</label>
-                </span>
-            </div>
+    <div class="flex flex-wrap gap-5">
+        <div class="grow">
+                            <span class="p-float-label input-item">
+                                <InputText v-model="content_block.name" class="w-full min-w-max"/>
+                                <label>Имя в базе (не отображается)</label>
+                             </span>
         </div>
+        <div class="grow">
+            <Dropdown v-model="selectedCountry" :options="countries" filter optionLabel="name" placeholder="Select a Country" class="w-full input-item">
+                <template #value="slotProps">
+                    <div v-if="slotProps.value" class="flex align-items-center">
+                        <img :alt="slotProps.value.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.value.code.toLowerCase()}`" style="width: 18px" />
+                        <div>{{ slotProps.value.name }}</div>
+                    </div>
+                    <span v-else>
+            {{ slotProps.placeholder }}
+        </span>
+                </template>
+                <template #option="slotProps">
+                    <div class="flex align-items-center">
+                        <img :alt="slotProps.option.label" src="https://primefaces.org/cdn/primevue/images/flag/flag_placeholder.png" :class="`mr-2 flag flag-${slotProps.option.code.toLowerCase()}`" style="width: 18px" />
+                        <div>{{ slotProps.option.name }}</div>
+                    </div>
+                </template>
+            </Dropdown>
+        </div>
+    </div>
 
-        <span class="p-float-label">
-                    <Textarea v-model="data.description" rows="5" class="w-full" autoResize/>
-                    <label>Текст</label>
-                </span>
-        <image-index :images="data.images"></image-index>
-    </Panel>
+    <span class="p-float-label input-item">
+                                <InputText v-model="content_block.title" class="w-full min-w-max"/>
+                                <label>Заголовок H2</label>
+                             </span>
 
+    <span class="p-float-label input-item">
+                        <Textarea v-model="content_block.description" autoResize rows="3" class="w-full"/>
+                        <label>Контент</label>
+                    </span>
 
 </template>
 
 <script>
-import ImageIndex from "@/src/components/image/ImageIndex.vue";
 
 export default {
     name: "ContentBlockCreateOrEdit",
-    components: {ImageIndex},
+    components: {},
 
     props: {
-        content_block: {
-            default() {
-                return {title: null}
-            }
-        },
+        content_block: {},
         index: {},
     },
-    data() {
-        return {
-            data: {
-                id: this.content_block.id,
-                name: this.content_block.name,
-                title: this.content_block.title,
-                description: this.content_block.description,
-                images: this.content_block.images,
-            }
-        };
-    },
+    // data() {
+    //     return {
+    //         data: {
+    //             id: this.content_block.id,
+    //             name: this.content_block.name,
+    //             title: this.content_block.title,
+    //             description: this.content_block.description,
+    //             images: this.content_block.images,
+    //         }
+    //     };
+    // },
 
     mounted() {
-        console.log(this.data)
-        console.log(this.content_block)
-
     },
 
     methods: {}

@@ -12,3 +12,14 @@ export function updatePost(post) {
     return axios.post(`/api/admin/post/${post.id}`, post)
 }
 
+export function getCategories() {
+    return axios.get(`/api/admin/category/`)
+}
+
+export function getContentBlocks() {
+    return axios.get(`/api/admin/category/`)
+}
+
+export function getImages() {
+    return axios.get(`/api/admin/category/`)
+}
