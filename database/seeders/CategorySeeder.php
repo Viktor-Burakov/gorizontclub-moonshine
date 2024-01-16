@@ -13,38 +13,38 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         Category::factory()->create([
-            'url' => 'splavy',
+            'slug' => 'splavy',
             'title' => 'Сплавы',
         ]);
 
         Category::factory()->create([
-            'url' => 'pohody',
+            'slug' => 'pohody',
             'title' => 'Походы',
         ]);
 
         Category::factory()->create([
-            'url' => 'konnye-pohody',
+            'slug' => 'konnye-pohody',
             'title' => 'Конные походы',
         ]);
 
         Category::factory()->create([
-            'url' => 'kayaking',
+            'slug' => 'kayaking',
             'title' => 'Каякинг',
         ]);
 
         Category::factory()->create([
             'active' => 0,
-            'url' => 'gornolyzhnye-tury-iz-tyumeni',
+            'slug' => 'gornolyzhnye-tury-iz-tyumeni',
             'title' => 'Горнолыжные выезды',
         ]);
 
         Category::factory()->create([
-            'url' => 'poleznoe',
+            'slug' => 'poleznoe',
             'title' => 'Полезное',
         ]);
 
         Category::factory()->create([
-            'url' => 'proshedshie',
+            'slug' => 'proshedshie',
             'title' => 'Прошедшие',
         ]);
     }

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
 use App\Models\ContentBlock;
+use App\Models\Image;
 use App\Models\Post;
 use Illuminate\Database\Seeder;
 
@@ -24,17 +25,18 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $categories = Category::all();
+        $contentBlocks = ContentBlock::all();
+        $images = Image::all();
 
-
-        $posts = Post::all()->each(function ($post) use ($categories) {
+        $posts = Post::all()->each(function ($post) use ($images, $contentBlocks, $categories) {
             $post->categories()->attach(
                 $categories->random(rand(1, 3))->pluck('id')->toArray()
             );
-        });
-
-        ContentBlock::all()->each(function ($contentBlock) use ($posts) {
-            $contentBlock->posts()->attach(
-                $posts->random(rand(0, 3))->pluck('id')->toArray()
+            $post->contentBlocks()->attach(
+                $contentBlocks->random(rand(0, 3))->pluck('id')->toArray()
+            );
+            $post->images()->attach(
+                $images->random(rand(1, 5))->pluck('id')->toArray()
             );
         });
 

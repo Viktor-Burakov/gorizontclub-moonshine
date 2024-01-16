@@ -62,7 +62,7 @@ function upload(inputId, options = {}) {
     }
 
 
-    const uploadHandler = async() => {
+    const uploadHandler = async () => {
         dropzoneItems.querySelectorAll('.dropzone-remove')
             .forEach(e => e.remove())
 
@@ -71,8 +71,12 @@ function upload(inputId, options = {}) {
         console.log('files:', files)
 
         try {
-            const imagesData = await fetch('/api/admin/contentBlock/', {
+            const imagesData = await fetch('/api/admin/image/', {
                 method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
                 body: files,
             })
             const movie = await imagesData.json();
@@ -107,10 +111,8 @@ function upload(inputId, options = {}) {
 document.addEventListener('DOMContentLoaded', function () {
 
     upload(
-        'content-block-images',
+        'content_block_images',
     )
-
-
 
 
 });

@@ -7,9 +7,7 @@
 - `php artisan migrate`
 - `php artisan db:seed`
 - `php artisan storage:link`
-- `php artisan ide-helper:generate` - PHPDoc generation for Laravel Facades
-- `php artisan ide-helper:models -N` - PHPDocs for models
-- `php artisan ide-helper:meta` - PhpStorm Meta file
+- `composer ide`
 - `php artisan serve --host=gorizontclub --port=80`
 
 ### Деплой

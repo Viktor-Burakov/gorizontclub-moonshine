@@ -15,12 +15,15 @@
     transition: opacity .3s;
     word-wrap: break-word;
     opacity: 0.5;
+    color: #000000;
+    border-bottom-left-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
 }
 
 .dropzone-item:hover .post-images__info {
     opacity: 1;
 }
 
-.dropzone-remove{
+.dropzone-remove {
     cursor: pointer;
 }

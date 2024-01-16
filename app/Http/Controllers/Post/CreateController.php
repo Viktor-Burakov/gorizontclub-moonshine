@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\Post;
 
-use App\Models\Categories;
 
+use App\MoonShine\Forms\PostForm;
 
 class CreateController extends BaseController
 {
-   public function __invoke()
-   {
-      $categories = Categories::all();
-
-      return view('post.create', compact('categories'));
-   }
+    public function __invoke()
+    {
+        return view('post.create', [
+            'form' => PostForm::make(),
+        ]);
+    }
 }

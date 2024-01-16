@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\API\Admin\CategoryController;
+use App\Http\Controllers\API\Admin\ContentBlockController;
+use App\Http\Controllers\API\Admin\ImageController;
+use App\Http\Controllers\API\Admin\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,11 +23,44 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => 'admin'], function () {
-    Route::group(['prefix' => 'contentBlock'], function () {
-//    Route::get('/{id?}', \App\Http\Controllers\API\Post\ShowController::class)
-//        ->where('id', '[0-9]+');
-//    Route::get('/category/{id}', \App\Http\Controllers\API\Category\ShowController::class)
-//        ->where('id', '[0-9]+');
-        Route::post('/', \App\Http\Controllers\API\Admin\ContentBlock\StoreController::class);
+    Route::group(['prefix' => 'category'], function () {
+        Route::get('/', [CategoryController::class, 'index'])
+            ->name('category.index');
+    });
+
+    Route::group(['prefix' => 'post'], function () {
+        Route::get('/', [PostController::class, 'index'])
+            ->name('post.index');
+
+        Route::get('/{id}', [PostController::class, 'edit'])
+            ->name('post.edit')
+            ->where(['id' => '[0-9]+']);
+
+        Route::post('/{id}', [PostController::class, 'update'])
+            ->name('post.update')
+            ->where(['id' => '[0-9]+']);
+
+        Route::post('/', [PostController::class, 'store'])
+            ->name('post.store');
+    });
+
+
+    Route::group(['prefix' => 'content-block'], function () {
+
+        Route::get('/', [ContentBlockController::class, 'index'])
+            ->name('content-block.index');
+
+        Route::get('/{id}', [ContentBlockController::class, 'edit'])
+            ->name('content-block.edit')
+            ->where(['id' => '[0-9]+']);
+
+        Route::post('/', [ContentBlockController::class, 'store'])
+            ->name('content-block.store');
+    });
+    Route::group(['prefix' => 'image'], function () {
+        Route::get('/', [ImageController::class, 'index'])
+            ->name('image.index');
+        Route::post('/', [ImageController::class, 'store'])
+            ->name('image.store');
     });
 });

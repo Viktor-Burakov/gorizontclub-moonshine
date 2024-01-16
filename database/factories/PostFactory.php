@@ -2,7 +2,6 @@
 
 namespace Database\Factories;
 
-use App\Enums\ImageEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,18 +17,18 @@ class PostFactory extends Factory
     public function definition(): array
     {
         $title = fake()->country . ' | ' . fake()->address() . ' | ' . fake()->date;
-        $url = str_slug($title);
+        $slug = str_slug($title);
         $date_start = fake()->dateTimeBetween('+1 month', '+3 month');
         $date_end = fake()->dateTimeBetween($date_start, $date_start->format('Y-m-d H:i:s') . ' +10 days');
 
         return [
             'active' => fake()->boolean,
             'title' => $title,
-            'url' => $url,
+            'slug' => $slug,
             'h1' => $title . '-H1',
             'description' => fake()->text(300),
             'preview_text' => fake()->text(400),
-            'preview' => $url . '.jpg',
+            'preview' => $slug . '.jpg',
             'preview_alt' => fake()->text(150),
             'date_start' => $date_start,
             'date_end' => $date_end,

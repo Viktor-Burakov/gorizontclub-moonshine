@@ -2,13 +2,14 @@
 
 namespace Tests\Feature;
 
-// use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class PagesResponseTest extends TestCase
 {
+    use RefreshDatabase;
 
-    public function testAdminIndex(): void
+    public function testIndexPage(): void
     {
         $response = $this->get('/');
 

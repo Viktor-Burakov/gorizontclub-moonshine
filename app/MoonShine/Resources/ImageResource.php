@@ -6,11 +6,14 @@ namespace App\MoonShine\Resources;
 
 use App\Enums\ImageEnum;
 use Illuminate\Database\Eloquent\Model;
+use MoonShine\ChangeLog\Components\ChangeLog;
 use MoonShine\Enums\ClickAction;
+use MoonShine\Enums\Layer;
 use MoonShine\Fields\Date;
+use MoonShine\Fields\DateRange;
 use MoonShine\Fields\ID;
 use MoonShine\Fields\Image;
-use MoonShine\Fields\Relationships\BelongsToMany;
+use MoonShine\Fields\Relationships\MorphToMany;
 use MoonShine\Fields\Text;
 use MoonShine\Resources\ModelResource;
 
@@ -22,25 +25,27 @@ class ImageResource extends ModelResource
     protected string $title = 'Изображения к постам';
     protected ?ClickAction $clickAction = ClickAction::EDIT;
 
-    protected int $itemsPerPage = 20;
+    protected array $with = ['posts', 'contentBlocks'];
+    protected int $itemsPerPage = 200;
+
     public function fields(): array
     {
         return [
             ID::make(),
             Text::make('Название', 'name')
                 ->required(),
-            Text::make('Alt','alt'),
-            Image::make('Превью', 'url')
+            Text::make('Alt', 'alt'),
+            Image::make('Превью', 'slug')
                 ->dir(ImageEnum::GALLERY_PREVIEW['dir']),
             Date::make('Добавлено', 'created_at'),
-            BelongsToMany::make(
+            MorphToMany::make(
                 'Прикреплен к блокам',
                 'contentBlocks',
                 fn($item) => $item->name
             )
                 ->inLine(separator: ' ', badge: true)
                 ->selectMode(),
-            BelongsToMany::make(
+            MorphToMany::make(
                 'Прикреплен к постам',
                 'posts',
                 fn($item) => $item->title
@@ -50,8 +55,25 @@ class ImageResource extends ModelResource
         ];
     }
 
+    public function filters(): array
+    {
+        return [
+            DateRange::make('created_at'),
+        ];
+    }
+
     public function rules(Model $item): array
     {
         return [];
+    }
+
+    protected function onBoot(): void
+    {
+        $this->getPages()
+            ->formPage()
+            ->pushToLayer(
+                Layer::BOTTOM,
+                ChangeLog::make('Changelog', $this)
+            );
     }
 }
