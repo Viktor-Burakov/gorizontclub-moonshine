@@ -1,7 +1,7 @@
 <template>
     <div v-if="image"
          :class="{ hidden: !isEditImage}"
-         class="p-dialog-mask p-component-overlay p-component-overlay-enter flex items-center justify-center z-50">
+class="p-dialog-mask p-component-overlay p-component-overlay-enter flex items-center justify-center z-50">
         <div class="p-dialog p-component flex flex-col w-11/12">
             <div class="p-dialog-header flex items-center justify-between">
                 <span class="p-dialog-title">{{ image.name }}</span>

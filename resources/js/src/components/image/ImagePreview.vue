@@ -28,7 +28,7 @@ export default {
         },
         editImageId: null
     },
-    emits: ['edit-image', 'delete-image'],
+emits: ['edit-image', 'delete-image'],
     methods: {
     },
     mounted() {

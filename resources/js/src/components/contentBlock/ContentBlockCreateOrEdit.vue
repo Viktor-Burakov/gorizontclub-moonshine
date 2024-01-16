@@ -3,7 +3,7 @@
         <div class="grow">
             <span class="p-float-label input-item">
                 <Dropdown v-model="selectedBlock" editable :options="contentBlocks" filter
-                          optionLabel="name" class="w-full"/>
+optionLabel="name" class="w-full"/>
                 <label>Имя в базе (не отображается)</label>
             </span>
         </div>
@@ -12,7 +12,7 @@
                 <InputText v-model="content_block.title" class="w-full min-w-max"/>
                 <label>Заголовок H2</label>
             </span>
-        </div>
+</div>
     </div>
 
     <span class="p-float-label input-item">

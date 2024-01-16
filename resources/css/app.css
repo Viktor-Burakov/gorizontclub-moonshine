@@ -78,8 +78,6 @@
     word-wrap: break-word;
     opacity: 0.5;
     color: #000000;
-}
-
 .image-gallery__info_top {
     display:flex;
     justify-content: flex-end;
@@ -92,6 +90,7 @@
 .image-gallery__info_bottom {
     background: rgba(255, 255, 255, .7);
     bottom: 0;
+
     border-bottom-left-radius: 0.375rem;
     border-bottom-right-radius: 0.375rem;
 }
@@ -99,8 +98,6 @@
 .image-gallery__info div {
     padding: 0.2rem;
 }
-
-
 
 .dropzone-item:hover .post-images__info {
     opacity: 1;
@@ -121,3 +118,4 @@
     max-width: 15rem;
     overflow: hidden;
 }
+
