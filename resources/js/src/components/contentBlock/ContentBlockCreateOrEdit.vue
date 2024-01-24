@@ -1,9 +1,9 @@
 <template>
-    <div class="flex flex-wrap gap-5">
+    <div class="flex flex-wrap gap-5 mt-3">
         <div class="grow">
             <span class="p-float-label input-item">
-                <Dropdown v-model="selectedBlock" editable :options="contentBlocks" filter
-                          optionLabel="name" class="w-full"/>
+                <Dropdown v-model="selectedBlock" @change="changeBlock" :options="contentBlocks"
+                          filter editable optionLabel="name" class="w-full"/>
                 <label>Имя в базе (не отображается)</label>
             </span>
         </div>
@@ -50,7 +50,11 @@ export default {
     },
 
     watch: {
-        selectedBlock(block) {
+    },
+
+    methods: {
+        changeBlock(e) {
+            const block = e.value
             if (typeof block === 'object' && block !== null) {
                 this.isLoading = true;
                 getContentBlock(block.id)
@@ -70,13 +74,11 @@ export default {
                 }).finally(() => {
                     this.isLoading = false
                 });
+
             } else {
                 this.content_block.name = block
             }
-
         },
-    },
-
-    methods: {}
+    }
 }
 </script>

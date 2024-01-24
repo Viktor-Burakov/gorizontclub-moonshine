@@ -11,7 +11,7 @@
             <div class="p-dialog-content">
                 <div class="basis-full w-full">
                     <div class="input-item">
-                        <Image :src="`storage/images_test/container/${url}`"
+                        <Image :src="url"
                                preview
                                class="image-gallery__full"
                         />
@@ -64,6 +64,11 @@ export default {
     watch: {
         image(newValue) {
             this.url = newValue.slug
+            if (newValue.file) {
+               this.url = URL.createObjectURL(newValue.file)
+            } else {
+                this.url = 'storage/images_test/container/' + newValue.slug
+            }
         },
     }
 }

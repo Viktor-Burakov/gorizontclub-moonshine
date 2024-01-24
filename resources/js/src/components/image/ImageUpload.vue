@@ -1,61 +1,63 @@
 <template>
-    <div class="flex flex-wrap gap-5">
-        <div class="grow">
-            <span class="p-buttonset">
-    <Button label="Сохранить пост и загрузить файлы" @click="addImages"/>
-    </span>
+
             <div
                 @dragenter.prevent="toggleActive"
                 @dragleave.prevent="toggleActive"
                 @dragover.prevent
                 @drop.prevent="droppedImages"
                 :class="{ 'dropzone_active': dropzoneActive }"
-                class="dropzone input-item"
+                class="dropzone"
             >
-                <span>Перетащить файлы сюда</span>
-                <label for="dropzoneFile" class="p-button p-button-outlined z-10">Выбрать файлы</label>
-                <input @change.prevent="choosedImages" type="file" multiple accept="image/*" id="dropzoneFile"
+                <label :for="'dropzoneFile_'+contentBlockIndex" class="p-button p-button-outlined z-10">Перетащить
+                    изображения сюда или выбрать
+                    файлы</label>
+                <input @change.prevent="choosedImages" type="file" multiple accept="image/*"
+                       :id="'dropzoneFile_'+contentBlockIndex"
                        class="hidden dropzoneFile"/>
-            </div>
 
-
-        </div>
-        <div class="grow">
-            <div class="flex flex-col items-end">
+                <div class="flex flex-col items-end gap-7">
                 <span class="p-buttonset" v-if="selectedImages">
-    <Button label="Добавить из базы" @click="addImages"/>
+    <Button label="Добавить из базы" @click="addImagesFromDB"/>
     <Button label="Сбросить выбор" @click="resetSelect" severity="danger" outlined/>
     </span>
-            </div>
-            <span class="p-float-label input-item">
+                    <span class="p-float-label">
                 <MultiSelect v-model="selectedImages" :options="imagesSelectedList"
-                             display="chip" filter optionLabel="name" class="w-full"/>
+                             display="chip" filter optionLabel="name" class="w-full min-w-48"/>
                 <label>Выбрать из базы</label>
             </span>
-        </div>
-    </div>
+                </div>
+
+            </div>
+
+
+
 
 
 </template>
 
 <script>
+import ImagePreview from "@/src/components/image/ImagePreview.vue";
+import draggable from "vuedraggable";
+import {strSlug} from "@/src/helpers/stringHelper.js";
+
 export default {
     name: "ImageUpload",
+    components: {draggable, ImagePreview},
     data() {
         return {
             selectedImages: null,
-            uploadImages: [],
             dropzoneActive: false,
         };
     },
     props: {
         imagesSelectedList: {},
         contentBlockIndex: null,
+        parentName: '',
     },
     methods: {
-        addImages() {
+        addImagesFromDB() {
             this.$emit(
-                'add-images',
+                'add-images-from-db',
                 this.selectedImages,
                 this.contentBlockIndex !== null ? this.contentBlockIndex : null
             )
@@ -69,41 +71,43 @@ export default {
         },
         choosedImages(e) {
             e.target.files.forEach((image) => {
-                this.uploadImages.push(image)
+                this.addTempImages(image)
             })
-            this.addTempImages()
+
         },
         droppedImages(e) {
             this.toggleActive()
             e.dataTransfer.files.forEach((image) => {
-                this.uploadImages.push(image)
+                this.addTempImages(image)
             })
-            this.addTempImages()
         },
-        addTempImages() {
+        addTempImages(image) {
             this.$emit(
                 'add-temp-images',
-                this.uploadImages,
+                image,
                 this.contentBlockIndex !== null ? this.contentBlockIndex : null
             )
         },
     },
     watch: {},
 
-    emits: ['add-images', 'add-temp-images'],
+    emits: ['add-images-from-db', 'add-temp-images'],
+    mounted() {
+    }
 }
 </script>
 
 <style scoped lang="scss">
 .dropzone {
     display: flex;
-    flex-direction: column;
+    flex-wrap: wrap;
     justify-content: center;
     gap: 1rem;
     align-items: center;
     border: 2px dashed var(--primary-color);
     border-radius: 6px;
     padding: 1rem;
+    margin-top: 0.5rem;
     transition: 0.3s ease all;
 }
 

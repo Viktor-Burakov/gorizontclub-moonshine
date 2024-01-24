@@ -53,14 +53,13 @@
                     </template>
                     <template #icons>
                         <span class="p-buttonset">
-                           <Button @click="deleteIdContentBlock(index)"
-                                   label="Создать новый" severity="warning" outlined/>
+                           <Button v-if="element.id" @click="deleteIdContentBlock(index)"
+                                   label="Отвязать от базы" severity="warning" outlined/>
                             <Button @click="removeContentBlock(index)"
                                     icon="pi pi-times" severity="danger" outlined/>
                         </span>
 
                     </template>
-
                     <content-block-create-or-edit
                         :content_block="element"
                         :contentBlocks="contentBlocks"
@@ -70,7 +69,8 @@
                         <image-upload
                             :imagesSelectedList="imagesSelectedList"
                             :contentBlockIndex="index"
-                            @add-images="addImages"
+                            :parentName="element.name"
+                            @add-images-from-db="addImagesFromDB"
                             @add-temp-images="addTempImages"
                         />
                         <draggable
@@ -92,7 +92,6 @@
                                 </div>
                             </template>
                         </draggable>
-
                     </template>
                 </Panel>
 
@@ -113,7 +112,8 @@
 
     <image-upload
         :imagesSelectedList="imagesSelectedList"
-        @add-images="addImages"
+        :parentName="post.h1"
+        @add-images-from-db="addImagesFromDB"
         @add-temp-images="addTempImages"
     />
     <draggable
@@ -147,6 +147,7 @@ import ContentBlockCreateOrEdit from "@/src/components/contentBlock/ContentBlock
 import ImagePreview from "@/src/components/image/ImagePreview.vue";
 import ImageEdit from "@/src/components/image/ImageEdit.vue";
 import ImageUpload from "@/src/components/image/ImageUpload.vue";
+import {strSlug} from "@/src/helpers/stringHelper.js";
 
 export default {
     name: "PostCreateOrEdit",
@@ -178,7 +179,6 @@ export default {
     },
     mounted() {
         this.isLoading = true
-
         getPost(6)
             .then((res) => {
                 this.categories = res.data.categories
@@ -217,39 +217,75 @@ export default {
 
         },
         addContentBlock(index) {
-            this.post.content_blocks.splice(index + 1, 0, {name: ''});
+            this.post.content_blocks.splice(index + 1, 0, {name: '', images: []});
         },
-        addImages(images, contentBlockIndex = null) {
+        addImagesFromDB(images, contentBlockIndex) {
             if (images) {
-                images.forEach((element) => {
-                    let imagesArray = []
-                    if (contentBlockIndex === null) {
-                        imagesArray = this.post.images
-                    } else {
-                        imagesArray = this.post.content_blocks[contentBlockIndex].images
-                    }
-                    if (!imagesArray.some(im => im.id === element.id)) {
-                        imagesArray.push({id: element.id})
-                    }
-
+                images.forEach((image) => {
+                    this.attachImage(image, contentBlockIndex)
                 })
             }
         },
-        addTempImages(images, contentBlockIndex = null) {
-            console.log(images)
-            console.log(contentBlockIndex)
+        attachImage(image, contentBlockIndex = null) {
+            if (contentBlockIndex !== null) {
+                this.pushImage(this.post.content_blocks[contentBlockIndex].images, image.id)
+            } else {
+                this.pushImage(this.post.images, image.id)
+            }
+        },
+        pushImage(images, id) {
+            if (!images.some(im => im.id === id)) {
+                images.push({id: id})
+            }
+        },
+        addTempImages(file, contentBlockIndex) {
+            let duplicate = false
+            for (const [key, item] of Object.entries(this.images)) {
+                if (item.file) {
+                    if (item.file.name === file.name &&
+                        item.file.size === file.size) {
+                        duplicate = true
+                    }
+                }
+            }
+
+            if (duplicate) {
+                this.attachImage({id: file.name}, contentBlockIndex)
+            } else {
+                let name = ''
+                if (contentBlockIndex !== null && contentBlockIndex !== undefined) {
+                    name = this.post.content_blocks[contentBlockIndex].name
+                } else {
+                    name = this.post.h1
+                }
+                const tempImage = {
+                    id: file.name,
+                    name: name,
+                    alt: name,
+                    slug: strSlug(name),
+                    file: file
+                }
+
+                this.images[tempImage.id] = tempImage
+                this.attachImage({id: tempImage.id}, contentBlockIndex)
+            }
+
+
         },
         changeEditImageId(id) {
             this.editImageId = id
             this.isEditImage = true
         },
         deleteImage(index, contentBlockIndex = null) {
+            if (this.images[this.post.content_blocks[contentBlockIndex].images[index].id].file) {
+                delete this.images[this.post.content_blocks[contentBlockIndex].images[index].id]
+            }
+
             if (contentBlockIndex === null) {
                 this.post.images.splice(index, 1)
             } else {
                 this.post.content_blocks[contentBlockIndex].images.splice(index, 1)
             }
-
         },
         editImageClose() {
             this.isEditImage = false
