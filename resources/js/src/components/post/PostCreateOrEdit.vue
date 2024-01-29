@@ -17,6 +17,98 @@
     </div>
 
 
+    <Panel header="SEO">
+        <div class="flex flex-wrap gap-5 mt-3">
+            <div class="flex flex-col gap-3">
+                <preview-upload
+                    :preview="post.preview"
+                    @upload-preview="post.preview = $event"
+                />
+            </div>
+            <div class="grow">
+                <span class="p-float-label input-item">
+            <Textarea v-model="post.title" autoResize rows="1" class="w-full"/>
+            <label>Title</label>
+        </span>
+
+                <span class="p-float-label input-item flex flex-wrap gap-5 mt-3">
+            <Textarea @click="generateSlug" autoResize rows="1" v-model="post.slug" class="grow"/>
+            <label>Url</label>
+        </span>
+
+                <span class="p-float-label input-item">
+            <Textarea v-model="post.description" autoResize rows="3" class="w-full"/>
+            <label>Description</label>
+        </span>
+
+                <div class="flex flex-wrap gap-1 input-item">
+                    <div class="basis-10/12 grow">
+<span class="p-float-label">
+                <Textarea v-model="post.h1" autoResize rows="1" class="w-full"/>
+            <label>Заголовок H1</label>
+            </span>
+                    </div>
+                    <div>
+                        <Button @click="this.post.h1 = this.post.title"
+                                v-tooltip.top="'Копировать Title в H1'"
+                                icon="pi pi-clone" outlined aria-label="Копировать"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </Panel>
+
+    <Panel header="Основное">
+        <div class="input-item flex items-center gap-3">
+            <InputSwitch v-model="post.active" class="p-invalid"/>
+            <span>Опубликовано</span>
+        </div>
+
+
+        <div class="input-item flex flex-wrap gap-1">
+        <div>
+
+        </div>
+            <div>
+
+            </div>
+
+
+        </div>
+
+
+
+
+        <span class="p-float-label input-item">
+            <Textarea v-model="post.preview_text" autoResize rows="3" class="w-full"/>
+            <label>Анонс</label>
+        </span>
+
+
+        <div class="flex flex-wrap gap-5 mt-3">
+            <div>
+        <span class="p-float-label input-item">
+            <Calendar v-model="post.date_start" showTime hourFormat="24" dateFormat="dd.mm.yy" showIcon/>
+            <label>Дата начала</label>
+        </span>
+            </div>
+            <div>
+        <span class="p-float-label input-item">
+            <Calendar v-model="post.date_end" showTime hourFormat="24" dateFormat="dd.mm.yy" showIcon/>
+            <label>Дата окончания</label>
+        </span>
+            </div>
+        </div>
+        <span class="p-float-label input-item">
+            <MultiSelect v-model="post.categories" :options="categories" optionLabel="title"
+                         display="chip" class="w-full"/>
+            <label>Разделы</label>
+        </span>
+    </Panel>
+
+
     <div class="flex justify-center">
         <Button label="Новый блок" outlined @click="addContentBlock()" class="w-10/12"/>
     </div>
@@ -54,6 +146,7 @@
                     <template #icons>
                         <span class="p-buttonset">
                            <Button v-if="element.id" @click="deleteIdContentBlock(index)"
+                                   v-tooltip.top="'Будет создан новый блок на основании существующего'"
                                    label="Отвязать от базы" severity="warning" outlined/>
                             <Button @click="removeContentBlock(index)"
                                     icon="pi pi-times" severity="danger" outlined/>
@@ -148,10 +241,12 @@ import ImagePreview from "@/src/components/image/ImagePreview.vue";
 import ImageEdit from "@/src/components/image/ImageEdit.vue";
 import ImageUpload from "@/src/components/image/ImageUpload.vue";
 import {strSlug} from "@/src/helpers/stringHelper.js";
+import PreviewUpload from "@/src/components/post/PreviewUpload.vue";
 
 export default {
     name: "PostCreateOrEdit",
     components: {
+        PreviewUpload,
         ImageUpload,
         ImageEdit,
         ContentBlockCreateOrEdit,
@@ -174,14 +269,14 @@ export default {
             isLoading: false,
             editImageId: null,
             isEditImage: false,
-            drag: false
+            drag: false,
         };
     },
     mounted() {
         this.isLoading = true
         getPost(6)
             .then((res) => {
-                this.categories = res.data.categories
+                this.categories = Object.values(res.data.categories)
                 this.contentBlocks = Object.values(res.data.contentBlocks)
                 this.images = res.data.images
                 this.imagesSelectedList = Object.values(res.data.images)
@@ -191,6 +286,7 @@ export default {
         }).finally(() => {
             this.isLoading = false
         });
+
     },
     computed: {
         draggingInfo() {
@@ -270,7 +366,7 @@ export default {
                 this.attachImage({id: tempImage.id}, contentBlockIndex)
             }
 
-
+            console.log(this.images)
         },
         changeEditImageId(id) {
             this.editImageId = id
@@ -290,11 +386,21 @@ export default {
         editImageClose() {
             this.isEditImage = false
         },
+        generateSlug() {
+            if (this.post.slug === '' && this.post.name !== '') {
+                this.post.slug = strSlug(this.post.title)
+            }
+        },
+        insertTitleInH1() {
+            if (this.post.title !== '') {
+                this.post.h1 = this.post.title
+            }
+        },
         update() {
             this.isLoading = true
-            updatePost(this.post)
+            console.log(this.post)
+            updatePost(this.post, this.images)
                 .then((res) => {
-                    console.log(res.data)
                     this.$toast.add({
                         severity: 'success',
                         summary: 'Пост сохранён!',

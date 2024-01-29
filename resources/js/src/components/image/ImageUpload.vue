@@ -38,7 +38,6 @@
 <script>
 import ImagePreview from "@/src/components/image/ImagePreview.vue";
 import draggable from "vuedraggable";
-import {strSlug} from "@/src/helpers/stringHelper.js";
 
 export default {
     name: "ImageUpload",

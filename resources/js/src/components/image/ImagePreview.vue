@@ -20,7 +20,6 @@
             <div>{{ image.slug }}</div>
         </div>
     </div>
-
 </template>
 
 <script>

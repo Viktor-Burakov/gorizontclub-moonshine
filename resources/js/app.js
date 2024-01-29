@@ -32,6 +32,8 @@ import ProgressSpinner from "primevue/progressspinner";
 import Dialog from "primevue/dialog";
 import Badge from "primevue/badge";
 import Dropdown from "primevue/dropdown";
+import InputSwitch from "primevue/inputswitch";
+import InputGroup from "primevue/inputgroup";
 
 const app = createApp(App)
 app.use(PrimeVue, {
@@ -64,5 +66,7 @@ app.component('ProgressSpinner', ProgressSpinner)
 app.component('Dialog', Dialog)
 app.component('Badge', Badge)
 app.component('Dropdown', Dropdown)
+app.component('InputSwitch', InputSwitch)
+app.component('InputGroup', InputGroup)
 
 app.mount('#app')

@@ -16,25 +16,31 @@
                                class="image-gallery__full"
                         />
                     </div>
-                    <div class="flex flex-row flex-wrap">
-                        <div class="basis-1/2 pr-1">
+                    <div class="flex flex-wrap gap-1">
+                        <div class="basis-5/12 grow">
                         <span class="p-float-label input-item">
-                    <InputText
+                    <Textarea
                         v-model="image.name"
                         class="w-full min-w-max"
+                        autoResize rows="1"
                     />
                     <label>Имя в базе (не отображается)</label>
                          </span>
                         </div>
-                        <div class="basis-1/2 pr-1">
+                        <div>
+                            <Button @click="insertNameInAlt" class="mt-2"
+                                    v-tooltip.top="'Копировать имя в Alt'"
+                                    icon="pi pi-clone" outlined aria-label="Копировать"/>
+                        </div>
+                        <div class="basis-5/12 grow">
                         <span class="p-float-label input-item">
-                    <InputText v-model="image.alt" class="w-full min-w-max"/>
+                    <Textarea v-model="image.alt" class="w-full min-w-max" autoResize rows="1"/>
                     <label>Alt</label>
                 </span>
                         </div>
                     </div>
                     <span class="p-float-label input-item">
-                <InputText v-model="image.slug" class="w-full"/>
+                <InputText @click="generateSlug" v-model="image.slug" class="w-full"/>
                 <label>Имя файла</label>
                 </span>
                 </div>
@@ -46,6 +52,8 @@
 </template>
 
 <script>
+import {strSlug} from "@/src/helpers/stringHelper.js";
+
 export default {
     name: "ImageEdit",
     data() {
@@ -56,18 +64,30 @@ export default {
     props: {
         image: {
             id: null,
+            name: '',
+            slug: '',
         },
         isEditImage: false
     },
     methods: {
+        generateSlug() {
+            if (this.image.slug === '' && this.image.name !== '') {
+                this.image.slug = strSlug(this.image.name)
+            }
+        },
+        insertNameInAlt() {
+            if (this.image.name !== '') {
+                this.image.alt = this.image.name
+            }
+        },
     },
     watch: {
-        image(newValue) {
-            this.url = newValue.slug
-            if (newValue.file) {
-               this.url = URL.createObjectURL(newValue.file)
+        image(newImage) {
+            this.url = newImage.slug
+            if (newImage.file) {
+                this.url = URL.createObjectURL(newImage.file)
             } else {
-                this.url = 'storage/images_test/container/' + newValue.slug
+                this.url = 'storage/images_test/container/' + newImage.slug
             }
         },
     }
