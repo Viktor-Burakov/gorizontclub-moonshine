@@ -68,17 +68,15 @@
 
 
         <div class="input-item flex flex-wrap gap-1">
-        <div>
+            <div>
 
-        </div>
+            </div>
             <div>
 
             </div>
 
 
         </div>
-
-
 
 
         <span class="p-float-label input-item">
@@ -242,6 +240,7 @@ import ImageEdit from "@/src/components/image/ImageEdit.vue";
 import ImageUpload from "@/src/components/image/ImageUpload.vue";
 import {strSlug} from "@/src/helpers/stringHelper.js";
 import PreviewUpload from "@/src/components/post/PreviewUpload.vue";
+import {uploadImages} from "@/src/api/api.js";
 
 export default {
     name: "PostCreateOrEdit",
@@ -318,11 +317,11 @@ export default {
         addImagesFromDB(images, contentBlockIndex) {
             if (images) {
                 images.forEach((image) => {
-                    this.attachImage(image, contentBlockIndex)
+                    this.attachImages(image, contentBlockIndex)
                 })
             }
         },
-        attachImage(image, contentBlockIndex = null) {
+        attachImages(image, contentBlockIndex = null) {
             if (contentBlockIndex !== null) {
                 this.pushImage(this.post.content_blocks[contentBlockIndex].images, image.id)
             } else {
@@ -346,7 +345,7 @@ export default {
             }
 
             if (duplicate) {
-                this.attachImage({id: file.name}, contentBlockIndex)
+                this.attachImages({id: file.name}, contentBlockIndex)
             } else {
                 let name = ''
                 if (contentBlockIndex !== null && contentBlockIndex !== undefined) {
@@ -363,19 +362,15 @@ export default {
                 }
 
                 this.images[tempImage.id] = tempImage
-                this.attachImage({id: tempImage.id}, contentBlockIndex)
+                this.attachImages({id: tempImage.id}, contentBlockIndex)
             }
-
-            console.log(this.images)
         },
         changeEditImageId(id) {
             this.editImageId = id
             this.isEditImage = true
         },
         deleteImage(index, contentBlockIndex = null) {
-            if (this.images[this.post.content_blocks[contentBlockIndex].images[index].id].file) {
-                delete this.images[this.post.content_blocks[contentBlockIndex].images[index].id]
-            }
+
 
             if (contentBlockIndex === null) {
                 this.post.images.splice(index, 1)
@@ -391,15 +386,13 @@ export default {
                 this.post.slug = strSlug(this.post.title)
             }
         },
-        insertTitleInH1() {
-            if (this.post.title !== '') {
-                this.post.h1 = this.post.title
-            }
-        },
         update() {
             this.isLoading = true
+
+
+
             console.log(this.post)
-            updatePost(this.post, this.images)
+            updatePost(this.post)
                 .then((res) => {
                     this.$toast.add({
                         severity: 'success',
@@ -407,12 +400,46 @@ export default {
                         detail: this.post.title,
                         life: 3000
                     });
+
+                    this.updateImages()
+
                 })
                 .catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Ошибка', detail: err.message, life: 5000});
+                    this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000});
                 })
                 .finally(() => {
                     this.isLoading = false
+                })
+        },
+        updateImages() {
+            const attachImages = []
+
+            Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) =>
+                Object.entries(contentBlocks['images']).forEach(([key, image]) => {
+                    if (!attachImages.includes(this.images[image['id']])) {
+                        attachImages.push(this.images[image['id']])
+                    }
+                }))
+            Object.entries(this.post.images).forEach(([key, image]) => {
+                if (!attachImages.includes(this.images[image['id']])) {
+                    attachImages.push(this.images[image['id']])
+                }
+            })
+
+            if (typeof(this.post.preview) === 'object') {
+                attachImages.push(this.post.preview)
+            }
+            uploadImages(attachImages)
+                .then((res) => {
+                    this.$toast.add({
+                        severity: 'success',
+                        summary: 'Изображения загружаются',
+                        detail: '',
+                        life: 3000
+                    });
+                })
+                .catch((err) => {
+                    this.$toast.add({severity: 'error', summary: 'Ошибка uploadImages', detail: err.message, life: 5000});
                 })
         },
         deletePost() {

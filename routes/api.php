@@ -40,6 +40,9 @@ Route::group(['prefix' => 'admin'], function () {
             ->name('post.update')
             ->where(['id' => '[0-9]+']);
 
+        Route::post('/images/', [PostController::class, 'imagesUpdate'])
+            ->name('post.imagesUpdate');
+
         Route::post('/', [PostController::class, 'store'])
             ->name('post.store');
     });

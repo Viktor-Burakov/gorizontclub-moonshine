@@ -8,68 +8,24 @@ export function getPost(id) {
     return axios.get(`/api/admin/post/${id}`)
 }
 
-export function updatePost(post, images) {
-    const data = new FormData();
-    const uploadImages = [];
-    Object.entries(post).forEach(([key, value]) => {
-
-            if (typeof value === 'string' || typeof value === 'number') {
-                data.append(key, value)
-            } else if (value !== null) {
-                Object.entries(value).forEach(([k, v]) => {
-                    Object.entries(v).forEach(([k1, v1]) => {
-                        if (k1 !== 'pivot') {
-                            data.append(`${key}[${k}][${k1}]`, v1)
-
-                            if (k1 === 'images') {
-                                data.append(`${key}[${k1}][${k1}]`, v1['id'])
-                                    Object.entries(v1).forEach(([k2, v2]) => {
-                                        data.append(`${key}[${k}][${k1}][${k2}]`, v2['id'])
-                                        data.append('attachImages[]', v2['id'])
-                                    })
-                            }
-                        }
-                    })
-
-                })
-            }
-
-
-            // if (key === 'content_blocks') {
-            //     Object.entries(value).forEach(([k, v]) => {
-            //         data.append(`${key}[${k}]`, v['id'])
-            //
-            //     })
-            // } else if (key === 'images') {
-            //     Object.entries(value).forEach(([k, v]) => {
-            //         data.append(`${key}[${k}]`, v['id'])
-            //         uploadImages.push(images[v['id']])
-            //
-            //     })
-            // } else if (key === 'categories') {
-            //     Object.entries(value).forEach(([k, v]) => {
-            //         data.append(`${key}[${k}]`, v['id'])
-            //     });
-            // } else {
-            //     data.append(key, value)
-            // }
-        }
-    )
-    // uploadImages.forEach((value) => {
-    //     data.append('attachImages[]', value['name'])
-    // })
-
-    console.log(data)
-
-    return axios.post(`/api/admin/post/${post.id}`, post, {
-        'accept': 'application/json',
-        'Accept-Language': 'en-US,en;q=0.8',
-        'Content-Type': 'multipart/form-data',
-    })
+export function updatePost(post) {
+    return axios.post(`/api/admin/post/${post.id}`, post)
 }
 
-function addImagesToUpload(key, value) {
+export function uploadImages(images) {
+    console.log(images)
+    const data = new FormData()
+    Object.entries(images).forEach(([key, image]) => {
+        if (typeof image.type === 'string') {
+            data.append('preview', image)
+        } else {
+            Object.entries(image).forEach(([field, value]) => {
+                data.append(`images[${key}][${field}]`, value)
+            })
+        }
 
+    })
+    return axios.post('/api/admin/post/images', data)
 }
 
 export function getCategories() {
