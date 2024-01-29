@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ImageIndexAction
 {
-    public function handle(): Collection
+    public function __invoke(): Collection
     {
         return Image::all(['id', 'name', 'alt', 'path', 'slug'])->keyBy('id');
     }

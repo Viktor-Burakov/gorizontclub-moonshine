@@ -20,16 +20,16 @@ class ContentBlockController extends Controller
 {
     public function index(ContentBlockIndexAction $action): JsonResponse
     {
-        return response()->json($action->handle());
+        return response()->json($action());
     }
     public function edit(int $id, ContentBlockEditAction $action): JsonResponse
     {
-        return response()->json($action->handle($id));
+        return response()->json($action($id));
     }
 
     public function store(ContentBlockStoreRequest $request, ContentBlockCreateOrUpdateAction $action): Response
     {
-        $action->handle($request->validated());
+        $action($request->validated());
 
         return response()->json(['message' => 'Блок добавлен!']);
     }

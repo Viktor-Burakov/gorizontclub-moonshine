@@ -14,7 +14,7 @@ use Illuminate\Support\Collection;
 
 class PostEditAction
 {
-    public function handle(int $postId): Collection
+    public function __invoke(int $postId): Collection
     {
         $data = collect();
 
@@ -29,14 +29,11 @@ class PostEditAction
 
         $data->put('post', $post);
 
-        $categoriesList = new CategoryIndexAction();
-        $data->put('categories', $categoriesList->handle());
+        $data->put('categories', (new CategoryIndexAction)());
 
-        $contentBlockList = new ContentBlockIndexAction();
-        $data->put('contentBlocks', $contentBlockList->handle());
+        $data->put('contentBlocks', (new ContentBlockIndexAction)());
 
-        $imageModels = new ImageIndexAction();
-        $data->put('images', $imageModels->handle());
+        $data->put('images', (new ImageIndexAction)());
 
 
         return $data;

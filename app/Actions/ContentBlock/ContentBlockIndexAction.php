@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ContentBlockIndexAction
 {
-    public function handle(): Collection
+    public function __invoke(): Collection
     {
         return ContentBlock::all(['id', 'name'])->keyBy('id');
     }

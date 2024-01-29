@@ -10,7 +10,7 @@ use App\Services\ImageService;
 
 class ContentBlockCreateOrUpdateAction
 {
-    public function handle($data): void
+    public function __invoke($data): void
     {
         $postId = $data['post_id'];
         unset($data['post_id']);

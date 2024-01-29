@@ -12,6 +12,6 @@ class CategoryController extends Controller
 {
     public function index(CategoryIndexAction $action): JsonResponse
     {
-        return response()->json($action->handle());
+        return response()->json($action());
     }
 }

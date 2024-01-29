@@ -10,7 +10,7 @@ use App\Services\ImageService;
 
 class PostCreateOrUpdateAction
 {
-    public function handle($data): void
+    public function __invoke($data): void
     {
         $data['slug'] = str_slug($data['slug']);
 

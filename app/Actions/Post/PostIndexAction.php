@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class PostIndexAction
 {
-    public function handle(): Collection
+    public function __invoke(): Collection
     {
         return Post::with(['categories:id,title'])->get();
     }

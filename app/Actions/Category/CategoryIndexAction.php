@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 
 class CategoryIndexAction
 {
-    public function handle(): Collection
+    public function __invoke(): Collection
     {
         return Category::all(['id', 'title'])->keyBy('id');
     }

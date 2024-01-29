@@ -19,7 +19,7 @@ class ImageController extends Controller
 {
     public function index(ImageIndexAction $action): JsonResponse
     {
-        return response()->json($action->handle());
+        return response()->json($action());
     }
     public function edit(string $postId)
     {

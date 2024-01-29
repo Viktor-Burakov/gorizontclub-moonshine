@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 
 class ContentBlockEditAction
 {
-    public function handle(int $id): ContentBlock
+    public function __invoke(int $id): ContentBlock
     {
         return ContentBlock::with(['images:id'])
             ->where('id', '=', $id)
