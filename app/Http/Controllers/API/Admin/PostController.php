@@ -35,6 +35,9 @@ class PostController extends Controller
 
     public function update(Request $request, PostCreateOrUpdateAction $action): Response
     {
+        dump($request->title);
+
+        dd($request->all());
         return response()->json($request->all());
         $action->handle($request->validated());
 
