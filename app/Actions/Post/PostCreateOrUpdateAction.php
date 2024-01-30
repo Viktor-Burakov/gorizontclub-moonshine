@@ -55,7 +55,9 @@ class PostCreateOrUpdateAction
 
         $images = array();
         if (isset($data['images'])) {
-            $images = collect($data['images'])->pluck('id');
+            foreach ($data['images'] as $index=>$image) {
+                $images[$image['id']] = ['sort' => $index];
+            }
             unset($data['images']);
         }
 
