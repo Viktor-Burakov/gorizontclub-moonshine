@@ -8,10 +8,25 @@
             </span>
         </div>
         <div class="grow">
-            <span class="p-float-label input-item">
-                <InputText v-model="content_block.title" class="w-full min-w-max"/>
-                <label>Заголовок H2</label>
-            </span>
+
+
+            <div class="flex flex-wrap gap-1 ">
+                <div class="basis-10/12 grow">
+                    <span class="p-float-label input-item">
+                        <InputText v-model="content_block.title" class="w-full min-w-max"/>
+                        <label>Заголовок H2</label>
+                    </span>
+                </div>
+                <div class="input-item">
+                    <Button @click="content_block.title = content_block.name"
+                            v-tooltip.top="'Копировать Title в H1'"
+                            icon="pi pi-clone" outlined aria-label="Копировать"/>
+                </div>
+            </div>
+
+
+
+
         </div>
     </div>
 

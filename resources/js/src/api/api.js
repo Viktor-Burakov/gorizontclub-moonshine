@@ -13,7 +13,6 @@ export function updatePost(post) {
 }
 
 export function uploadImages(images) {
-    console.log(images)
     const data = new FormData()
     Object.entries(images).forEach(([key, image]) => {
         if (typeof image.type === 'string') {

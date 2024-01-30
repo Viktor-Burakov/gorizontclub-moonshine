@@ -9,6 +9,7 @@ use App\Actions\Post\PostEditAction;
 use App\Actions\Post\PostImagesCreateOrUpdateAction;
 use App\Actions\Post\PostIndexAction;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Post\PostCreateOrUpdateRequest;
 use App\Http\Requests\Post\StoreRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -34,12 +35,10 @@ class PostController extends Controller
         return response()->json(['message' => 'Пост добавлен!']);
     }
 
-    public function update(Request $request, PostCreateOrUpdateAction $action): Response
+    public function update(PostCreateOrUpdateRequest $request, PostCreateOrUpdateAction $action): Response
     {
-        dump('dump');
 
-        dd($request->all());
-        return response()->json($request->all());
+
         $action($request->validated());
 
         return response()->json(['message' => 'Пост обновлен!']);

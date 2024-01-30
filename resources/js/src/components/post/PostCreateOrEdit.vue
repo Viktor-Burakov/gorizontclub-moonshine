@@ -54,6 +54,22 @@
                                 icon="pi pi-clone" outlined aria-label="Копировать"/>
                     </div>
                 </div>
+
+                <div class="flex flex-wrap gap-1 input-item">
+                    <div class="basis-10/12 grow">
+                <span class="p-float-label input-item">
+            <Textarea v-model="post.preview_alt" autoResize rows="1" class="w-full"/>
+            <label>Превью Alt</label>
+        </span>
+                    </div>
+                    <div>
+                        <Button @click="this.post.preview_alt = this.post.title"
+                                v-tooltip.top="'Копировать Title в H1'"
+                                icon="pi pi-clone" outlined aria-label="Копировать"/>
+                    </div>
+                </div>
+
+
             </div>
         </div>
 
@@ -272,20 +288,7 @@ export default {
         };
     },
     mounted() {
-        this.isLoading = true
-        getPost(6)
-            .then((res) => {
-                this.categories = Object.values(res.data.categories)
-                this.contentBlocks = Object.values(res.data.contentBlocks)
-                this.images = res.data.images
-                this.imagesSelectedList = Object.values(res.data.images)
-                this.post = res.data.post
-            }).catch((err) => {
-            this.$toast.add({severity: 'error', summary: 'Ошибка getPost', detail: err.message, life: 5000});
-        }).finally(() => {
-            this.isLoading = false
-        });
-
+        this.get(6)
     },
     computed: {
         draggingInfo() {
@@ -386,12 +389,29 @@ export default {
                 this.post.slug = strSlug(this.post.title)
             }
         },
+        get(id) {
+            this.isLoading = true
+            getPost(id)
+                .then((res) => {
+                    this.categories = Object.values(res.data.categories)
+                    this.contentBlocks = Object.values(res.data.contentBlocks)
+                    this.images = res.data.images
+                    this.imagesSelectedList = Object.values(res.data.images)
+                    this.post = res.data.post
+                    if (this.post.active === 1) {
+                        this.post.active = true
+                    }
+                }).catch((err) => {
+                this.$toast.add({severity: 'error', summary: 'Ошибка getPost', detail: err.message, life: 5000});
+            }).finally(() => {
+                this.isLoading = false
+            })
+        },
         update() {
             this.isLoading = true
 
-
-
             console.log(this.post)
+
             updatePost(this.post)
                 .then((res) => {
                     this.$toast.add({
@@ -402,7 +422,7 @@ export default {
                     });
 
                     this.updateImages()
-
+                    this.get(this.post.id)
                 })
                 .catch((err) => {
                     this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000});
@@ -426,7 +446,7 @@ export default {
                 }
             })
 
-            if (typeof(this.post.preview) === 'object') {
+            if (typeof (this.post.preview) === 'object') {
                 attachImages.push(this.post.preview)
             }
             uploadImages(attachImages)
@@ -439,7 +459,12 @@ export default {
                     });
                 })
                 .catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Ошибка uploadImages', detail: err.message, life: 5000});
+                    this.$toast.add({
+                        severity: 'error',
+                        summary: 'Ошибка uploadImages',
+                        detail: err.message,
+                        life: 5000
+                    });
                 })
         },
         deletePost() {
