@@ -62,15 +62,13 @@ export default {
         };
     },
 
-    mounted() {
-        getPosts()
-            .then((res) => (this.posts = res.data))
-            .catch((err) => {
-                this.$toast.add({severity: 'error', summary: 'Ошибка getPosts', detail: err.message, life: 5000});
-            })
-            .finally(() => {
-                this.isLoading = false
-            })
+    async mounted() {
+        try {
+            const res = await getPosts()
+            this.posts = res.data
+        } catch (err) {
+            this.$toast.add({severity: 'error', summary: 'Ошибка getPosts', detail: err.message, life: 5000});
+        }
     }
 
 

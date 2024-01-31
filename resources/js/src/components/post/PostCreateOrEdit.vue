@@ -287,8 +287,9 @@ export default {
             drag: false,
         };
     },
-    mounted() {
-        this.get(6)
+    async mounted() {
+        await this.get(6)
+        this.isLoading = false
     },
     computed: {
         draggingInfo() {
@@ -389,93 +390,103 @@ export default {
                 this.post.slug = strSlug(this.post.title)
             }
         },
-        get(id) {
+        async get(id) {
             this.isLoading = true
-            getPost(id)
-                .then((res) => {
-                    this.categories = Object.values(res.data.categories)
-                    this.contentBlocks = Object.values(res.data.contentBlocks)
-                    this.images = res.data.images
-                    this.imagesSelectedList = Object.values(res.data.images)
-                    this.post = res.data.post
-                    if (this.post.active === 1) {
-                        this.post.active = true
-                    }
-                }).catch((err) => {
+            try {
+                const res = await getPost(id)
+
+                this.categories = Object.values(res.data.categories)
+                this.contentBlocks = Object.values(res.data.contentBlocks)
+                this.images = res.data.images
+                this.imagesSelectedList = Object.values(res.data.images)
+                this.post = res.data.post
+                if (this.post.active === 1) {
+                    this.post.active = true
+                }
+
+                this.$toast.add({
+                    severity: 'success',
+                    summary: `Поля обновлены`,
+                    life: 3000
+                })
+            } catch (err) {
                 this.$toast.add({severity: 'error', summary: 'Ошибка getPost', detail: err.message, life: 5000});
-            }).finally(() => {
-                this.isLoading = false
-            })
+            }
         },
-        update() {
+
+        async update() {
             this.isLoading = true
 
             console.log(this.post)
+            try {
+                const message = await updatePost(this.post)
 
-            updatePost(this.post)
-                .then((res) => {
-                    this.$toast.add({
-                        severity: 'success',
-                        summary: res.data.message,
-                        life: 3000
-                    });
+                this.$toast.add({
+                    severity: 'success',
+                    summary: message.data.message,
+                    life: 3000
+                })
 
-                    this.updateImages()
-                    this.get(this.post.id)
-                })
-                .catch((err) => {
-                    this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000});
-                })
-                .finally(() => {
-                    this.isLoading = false
-                })
+                await this.get(this.post.id)
+
+                await this.updateImages()
+
+            } catch (err) {
+                this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000})
+            } finally {
+                this.isLoading = false
+            }
         },
-        updateImages() {
-            const attachImages = []
 
-            Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) =>
-                Object.entries(contentBlocks['images']).forEach(([key, image]) => {
+        async updateImages() {
+            try {
+
+                const attachImages = []
+
+                Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) =>
+                    Object.entries(contentBlocks['images']).forEach(([key, image]) => {
+                        if (!attachImages.includes(this.images[image['id']])) {
+                            attachImages.push(this.images[image['id']])
+                        }
+                    }))
+                Object.entries(this.post.images).forEach(([key, image]) => {
                     if (!attachImages.includes(this.images[image['id']])) {
                         attachImages.push(this.images[image['id']])
                     }
-                }))
-            Object.entries(this.post.images).forEach(([key, image]) => {
-                if (!attachImages.includes(this.images[image['id']])) {
-                    attachImages.push(this.images[image['id']])
-                }
-            })
+                })
 
-            if (typeof (this.post.preview) === 'object') {
-                attachImages.push(this.post.preview)
+                if (typeof (this.post.preview) === 'object') {
+                    attachImages.push(this.post.preview)
+                }
+                const message = await uploadImages(attachImages)
+
+                this.$toast.add({
+                    severity: 'success',
+                    summary: 'Изображения загружаются',
+                    detail: message.data.message,
+                    life: 3000
+                })
+            } catch (err) {
+                this.$toast.add({
+                    severity: 'error',
+                    summary: 'Ошибка uploadImages',
+                    detail: err.message,
+                    life: 5000
+                })
             }
-            uploadImages(attachImages)
-                .then((res) => {
-                    this.$toast.add({
-                        severity: 'success',
-                        summary: 'Изображения загружаются',
-                        detail: '',
-                        life: 3000
-                    });
-                })
-                .catch((err) => {
-                    this.$toast.add({
-                        severity: 'error',
-                        summary: 'Ошибка uploadImages',
-                        detail: err.message,
-                        life: 5000
-                    });
-                })
         },
         deletePost() {
 
             this.$toast.add({severity: 'success', summary: 'Пост удален', detail: 'Успешно', life: 3000});
-        },
+        }
+        ,
 
 
     }
 
 
-};
+}
+;
 </script>
 <style scoped>
 .flip-list-move {

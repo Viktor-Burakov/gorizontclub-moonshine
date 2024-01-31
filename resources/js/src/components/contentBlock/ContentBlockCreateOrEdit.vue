@@ -25,8 +25,6 @@
             </div>
 
 
-
-
         </div>
     </div>
 
@@ -64,32 +62,28 @@ export default {
         }
     },
 
-    watch: {
-    },
+    watch: {},
 
     methods: {
-        changeBlock(e) {
+        async changeBlock(e) {
             const block = e.value
             if (typeof block === 'object' && block !== null) {
-                this.isLoading = true;
-                getContentBlock(block.id)
-                    .then((res) => {
-                        this.content_block.id = res.data.id
-                        this.content_block.name = res.data.name
-                        this.content_block.title = res.data.title
-                        this.content_block.description = res.data.description
-                        this.content_block.images = res.data.images
-                    }).catch((err) => {
+                try {
+                    const res = await getContentBlock(block.id)
+
+                    this.content_block.id = res.data.id
+                    this.content_block.name = res.data.name
+                    this.content_block.title = res.data.title
+                    this.content_block.description = res.data.description
+                    this.content_block.images = res.data.images
+                } catch (err) {
                     this.$toast.add({
                         severity: 'error',
                         summary: 'Ошибка getContentBlock',
                         detail: err.message,
                         life: 5000
-                    });
-                }).finally(() => {
-                    this.isLoading = false
-                });
-
+                    })
+                }
             } else {
                 this.content_block.name = block
             }
