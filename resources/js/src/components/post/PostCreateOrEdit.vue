@@ -416,8 +416,7 @@ export default {
                 .then((res) => {
                     this.$toast.add({
                         severity: 'success',
-                        summary: 'Пост сохранён!',
-                        detail: this.post.title,
+                        summary: res.data.message,
                         life: 3000
                     });
 

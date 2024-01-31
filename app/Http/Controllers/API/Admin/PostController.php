@@ -37,22 +37,12 @@ class PostController extends Controller
 
     public function update(PostCreateOrUpdateRequest $request, PostCreateOrUpdateAction $action): Response
     {
-
-
-        $action($request->validated());
-
-        return response()->json(['message' => 'Пост обновлен!']);
+        return response()->json(['message' => $action($request->validated())]);
     }
 
     public function imagesUpdate(Request $request, PostImagesCreateOrUpdateAction $action): Response
     {
-        dump($request->title);
-
-        dd($request->all());
-        return response()->json($request->all());
-        $action($request->validated());
-
-        return response()->json(['message' => 'Пост обновлен!']);
+        return response()->json(['message' => $action($request->all())]);
     }
 
     public function destroy(string $id)

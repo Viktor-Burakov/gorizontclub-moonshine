@@ -37,7 +37,8 @@ class Post extends Model
 
     public function contentBlocks(): MorphToMany
     {
-        return $this->morphToMany(ContentBlock::class, 'content_blockable');
+        return $this->morphToMany(ContentBlock::class, 'content_blockable')
+            ->orderByPivot('sort');
     }
 
     public function images(): MorphToMany

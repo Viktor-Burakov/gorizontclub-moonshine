@@ -12,7 +12,7 @@ use Illuminate\Support\Carbon;
 
 class PostCreateOrUpdateAction
 {
-    public function __invoke($data): void
+    public function __invoke($data)
     {
         $data['slug'] = str_slug($data['slug']);
         unset($data['preview']);
@@ -24,46 +24,49 @@ class PostCreateOrUpdateAction
         }
 
         $contentBlocksSync = array();
+        $ContentBlocksArrayIndex = array();
         if (isset($data['content_blocks'])) {
-            $contentBlocks = array();
+            $contentBlocksToApsert = array();
             $updatedAt = Carbon::now();
 
-            foreach ($data['content_blocks'] as $contentBlock) {
-                if (isset($contentBlock['id'])) {
-                    $contentBlocksSync[] = $contentBlock['id'];
-                } else {
+            foreach ($data['content_blocks'] as $index => $contentBlock) {
+                if (!isset($contentBlock['id'])) {
                     $contentBlock['id'] = null;
                 }
+
                 unset($contentBlock['images']);
                 $contentBlock['updated_at'] = $updatedAt;
-                $contentBlocks[] = $contentBlock;
+
+                $contentBlocksToApsert[] = $contentBlock;
+                $ContentBlocksArrayIndex[$contentBlock['name']] = $index;
             }
 
             ContentBlock::upsert(
-                $contentBlocks,
+                $contentBlocksToApsert,
                 ['id'],
                 ['name', 'title', 'description',]
             );
-            $contentBlocksSync = ContentBlock::select('id')
+            $contentBlocksArray = ContentBlock::select('id', 'name')
                 ->where('updated_at', $updatedAt)
-                ->get()
-                ->pluck('id')
-                ->toArray();
+                ->get();
+
+            foreach ($contentBlocksArray as $cb) {
+                $contentBlocksSync[$cb->id] = ['sort' => $ContentBlocksArrayIndex[$cb->name]];
+            }
 
             unset($data['content_blocks']);
         }
 
         $images = array();
         if (isset($data['images'])) {
-            foreach ($data['images'] as $index=>$image) {
+            foreach ($data['images'] as $index => $image) {
+                if (!is_int($image['id'])) {
+                    continue;
+                }
                 $images[$image['id']] = ['sort' => $index];
             }
             unset($data['images']);
         }
-
-        dump($contentBlocksSync);
-        dump($images);
-
 
         $post = Post::updateOrCreate(['id' => $data['id']], $data);
 
@@ -71,6 +74,7 @@ class PostCreateOrUpdateAction
         $post->contentBlocks()->sync($contentBlocksSync);
         $post->images()->sync($images);
 
+        return 'Пост id:' . $post->id . ' обновлен!';
 
 //        if (!empty($preview)) {
 //            $pathPreview = storage_path('app/public/' . PostEnum::POST_PREVIEW['dir'] . $post->preview);
