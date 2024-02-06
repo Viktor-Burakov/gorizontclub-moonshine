@@ -14,6 +14,7 @@
     <input @change.prevent="uploadPreview" type="file" accept="image/*"
            id="previewFile"
            class="hidden"/>
+    <Button v-if="preview !== oldPreview" label="Сбросить" @click="resetPreview" severity="danger" outlined />
 </template>
 
 <script>
@@ -23,11 +24,12 @@ export default {
         return {
             url: '',
             dropImageActive: false,
-            previewFile: {}
+            previewFile: {},
         }
     },
     props: {
         preview: {},
+        oldPreview: '',
     },
     methods: {
         toggleActive() {
@@ -42,6 +44,9 @@ export default {
                 this.previewFile = e.dataTransfer.files[0]
             }
             this.$emit('upload-preview',  this.previewFile)
+        },
+        resetPreview() {
+            this.$emit('upload-preview',  this.oldPreview)
         },
     },
     watch: {

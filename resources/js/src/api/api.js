@@ -15,12 +15,14 @@ export function updatePost(post) {
 export function uploadImages(images) {
     const data = new FormData()
     Object.entries(images).forEach(([key, image]) => {
-        if (typeof image.type === 'string') {
-            data.append('preview', image)
-        } else {
+        if (typeof image.type === 'object') {
             Object.entries(image).forEach(([field, value]) => {
                 data.append(`images[${key}][${field}]`, value)
             })
+        } else if (typeof image.type === 'string') {
+            data.append('preview', image)
+        } else  if (typeof image === 'string') {
+            data.append('oldPreview', image)
         }
 
     })

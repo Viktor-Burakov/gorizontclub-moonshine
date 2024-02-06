@@ -22,6 +22,7 @@
             <div class="flex flex-col gap-3">
                 <preview-upload
                     :preview="post.preview"
+                    :oldPreview="post.oldPreview"
                     @upload-preview="post.preview = $event"
                 />
             </div>
@@ -273,6 +274,7 @@ export default {
             post: {
                 id: null,
                 content_blocks: null,
+                oldPreview: '',
             },
 
             categories: [],
@@ -348,8 +350,10 @@ export default {
                 }
             }
 
+            const tempId = `temp_image_${file.name}_${file.size}`
+
             if (duplicate) {
-                this.attachImages({id: file.name}, contentBlockIndex)
+                this.attachImages({id: tempId}, contentBlockIndex)
             } else {
                 let name = ''
                 if (contentBlockIndex !== null && contentBlockIndex !== undefined) {
@@ -358,7 +362,7 @@ export default {
                     name = this.post.h1
                 }
                 const tempImage = {
-                    id: file.name,
+                    id: tempId,
                     name: name,
                     alt: name,
                     slug: strSlug(name),
@@ -403,6 +407,7 @@ export default {
                 if (this.post.active === 1) {
                     this.post.active = true
                 }
+                this.post.oldPreview = res.data.post.preview
 
                 this.$toast.add({
                     severity: 'success',
@@ -427,7 +432,7 @@ export default {
                     life: 3000
                 })
 
-                await this.get(this.post.id)
+            // todo    await this.get(this.post.id)
 
                 await this.updateImages()
 
@@ -439,8 +444,13 @@ export default {
         },
 
         async updateImages() {
-            try {
 
+            try {
+                this.$toast.add({
+                    severity: 'success',
+                    summary: 'Загрузка изображений',
+                    life: 3000
+                })
                 const attachImages = []
 
                 Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) =>
@@ -457,12 +467,14 @@ export default {
 
                 if (typeof (this.post.preview) === 'object') {
                     attachImages.push(this.post.preview)
+                    attachImages.push(this.post.oldPreview)
                 }
+
                 const message = await uploadImages(attachImages)
 
                 this.$toast.add({
                     severity: 'success',
-                    summary: 'Изображения загружаются',
+                    summary: 'Изображения загружены!',
                     detail: message.data.message,
                     life: 3000
                 })
