@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Actions\Post;
 
-use App\Enums\PostEnum;
 use App\Models\ContentBlock;
+use App\Models\Image;
 use App\Models\Post;
-use App\Services\ImageService;
-use Illuminate\Support\Carbon;
+use App\Services\PostContentService;
 
 class PostCreateOrUpdateAction
 {
@@ -17,48 +16,44 @@ class PostCreateOrUpdateAction
         $data['slug'] = str_slug($data['slug']);
         unset($data['preview']);
 
-        $categories = array();
+        $categoriesSync = array();
         if (isset($data['categories'])) {
-            $categories = collect($data['categories'])->pluck('id');
+            $categoriesSync = collect($data['categories'])->pluck('id');
             unset($data['categories']);
         }
 
         $contentBlocksSync = array();
-        $ContentBlocksArrayIndex = array();
         if (isset($data['content_blocks'])) {
-
-            $contentBlocksSync = (new PostContentUpsert)($data['content_blocks'], new ContentBlock, ['name', 'title', 'description']);
+            $contentBlocks = new PostContentService(
+                $data['content_blocks'],
+                new ContentBlock,
+                ['name', 'title', 'description']
+            );
+            $contentBlocksSync = $contentBlocks->getSync();
 
             unset($data['content_blocks']);
         }
 
-        $images = array();
+        $imagesSync = array();
+
         if (isset($data['images'])) {
-            foreach ($data['images'] as $index => $image) {
-                if (!is_int($image['id'])) {
-                    dump($image['id']);
-                    continue;
-                }
-                $images[$image['id']] = ['sort' => $index];
-            }
+            $images = new PostContentService(
+                $data['images'],
+                new Image,
+                []
+            );
+            $imagesSync = $images->getSync();
+
             unset($data['images']);
         }
 
         $post = Post::updateOrCreate(['id' => $data['id']], $data);
 
-        $post->categories()->sync($categories);
+        $post->categories()->sync($categoriesSync);
         $post->contentBlocks()->sync($contentBlocksSync);
-        $post->images()->sync($images);
+        $post->images()->sync($imagesSync);
 
         return 'Пост id:' . $post->id . ' обновлен!';
 
-//        if (!empty($preview)) {
-//            $pathPreview = storage_path('app/public/' . PostEnum::POST_PREVIEW['dir'] . $post->preview);
-//
-//            $thumbnail = new ImageService($preview);
-//            $thumbnail->resize(PostEnum::POST_PREVIEW['width']);
-//
-//            $thumbnail->saveToJpgAndWebP($pathPreview);
-//        }
     }
 }
