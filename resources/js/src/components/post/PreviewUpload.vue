@@ -54,7 +54,7 @@ export default {
             if (typeof(this.preview) === 'object') {
                 this.url = URL.createObjectURL(this.preview)
             } else {
-                this.url = '/storage/images_test/post_preview/' + this.preview
+                this.url = `/storage/images_test/post_preview/${this.preview}?` + Math.floor(Math.random() * 100000)
             }
         },
     },

@@ -432,10 +432,9 @@ export default {
                     life: 3000
                 })
 
-            // todo    await this.get(this.post.id)
-
                 await this.updateImages()
 
+                await this.get(this.post.id)
             } catch (err) {
                 this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000})
             } finally {
@@ -470,20 +469,31 @@ export default {
                     attachImages.push(this.post.oldPreview)
                 }
 
-                const message = await uploadImages(attachImages)
+                console.log(attachImages)
+                const resImages = await uploadImages(attachImages)
 
-                this.$toast.add({
-                    severity: 'success',
-                    summary: 'Изображения загружены!',
-                    detail: message.data.message,
-                    life: 3000
-                })
+                if (!resImages.data.err) {
+                    this.$toast.add({
+                        severity: 'success',
+                        summary: 'Изображения сохранены!',
+                        detail: resImages.data.message,
+                        life: 3000
+                    })
+                } else {
+                    this.$toast.add({
+                        severity: 'error',
+                        summary: 'Ошибка загрузки изображений!',
+                        detail: resImages.data.message,
+                        life: 10000
+                    })
+                }
+
             } catch (err) {
                 this.$toast.add({
                     severity: 'error',
-                    summary: 'Ошибка uploadImages',
+                    summary: 'Ошибка API uploadImages',
                     detail: err.message,
-                    life: 5000
+                    life: 10000
                 })
             }
         },

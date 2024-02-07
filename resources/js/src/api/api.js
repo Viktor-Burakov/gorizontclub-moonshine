@@ -15,7 +15,7 @@ export function updatePost(post) {
 export function uploadImages(images) {
     const data = new FormData()
     Object.entries(images).forEach(([key, image]) => {
-        if (typeof image.type === 'object') {
+        if (typeof image.id !== 'undefined') {
             Object.entries(image).forEach(([field, value]) => {
                 data.append(`images[${key}][${field}]`, value)
             })
@@ -44,3 +44,7 @@ export function getContentBlock(id) {
 export function getImages() {
     return axios.get(`/api/admin/image/`)
 }
+
+
+
+

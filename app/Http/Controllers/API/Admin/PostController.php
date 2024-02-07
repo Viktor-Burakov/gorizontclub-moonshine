@@ -10,6 +10,7 @@ use App\Actions\Post\PostImagesCreateOrUpdateAction;
 use App\Actions\Post\PostIndexAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostCreateOrUpdateRequest;
+use App\Http\Requests\Post\PostImagesCreateOrUpdateRequest;
 use App\Http\Requests\Post\StoreRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -40,9 +41,14 @@ class PostController extends Controller
         return response()->json(['message' => $action($request->validated())]);
     }
 
-    public function imagesUpdate(Request $request, PostImagesCreateOrUpdateAction $action): Response
+    public function imagesUpdate(PostImagesCreateOrUpdateRequest $request, PostImagesCreateOrUpdateAction $action): Response
     {
-        return response()->json(['message' => $action($request->all())]);
+        $res = $action($request->validated());
+
+        return response()->json([
+            'message' => $res['message'],
+            'err' => $res['err'],
+            ]);
     }
 
     public function destroy(string $id)
