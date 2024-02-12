@@ -13,6 +13,9 @@ class PostCreateOrUpdateAction
 {
     public function __invoke($data)
     {
+        /// todo делать для КБ createOrUpdate , а для Images ввиде сервиса
+
+
         $data['slug'] = str_slug($data['slug']);
         unset($data['preview']);
 

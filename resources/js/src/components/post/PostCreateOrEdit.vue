@@ -434,7 +434,7 @@ export default {
 
                 await this.updateImages()
 
-                await this.get(this.post.id)
+             //   await this.get(this.post.id)
             } catch (err) {
                 this.$toast.add({severity: 'error', summary: 'Ошибка updatePost', detail: err.message, life: 5000})
             } finally {
@@ -445,31 +445,28 @@ export default {
         async updateImages() {
 
             try {
-                this.$toast.add({
-                    severity: 'success',
-                    summary: 'Загрузка изображений',
-                    life: 3000
-                })
                 const attachImages = []
-
-                Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) =>
-                    Object.entries(contentBlocks['images']).forEach(([key, image]) => {
-                        if (!attachImages.includes(this.images[image['id']])) {
-                            attachImages.push(this.images[image['id']])
-                        }
-                    }))
-                Object.entries(this.post.images).forEach(([key, image]) => {
-                    if (!attachImages.includes(this.images[image['id']])) {
-                        attachImages.push(this.images[image['id']])
-                    }
+                let message = 'Загрузка изображений.\n'
+                let n = 0
+                Object.entries(this.post.content_blocks).forEach(([key, contentBlocks]) => {
+                    n = this.addImagesToUpload(contentBlocks['images'], attachImages, n)
                 })
+                n = this.addImagesToUpload(this.post.images, attachImages, n)
 
                 if (typeof (this.post.preview) === 'object') {
                     attachImages.push(this.post.preview)
                     attachImages.push(this.post.oldPreview)
+                    n++
                 }
 
-                console.log(attachImages)
+                message += `Новых: ${n} \n Всего: ${attachImages.length}\n`
+                this.$toast.add({
+                    severity: 'success',
+                    summary: 'Обновление изображений',
+                    detail: message,
+                    life: 3000
+                })
+
                 const resImages = await uploadImages(attachImages)
 
                 if (!resImages.data.err) {
@@ -496,6 +493,17 @@ export default {
                     life: 10000
                 })
             }
+        },
+        addImagesToUpload(images, attachImages, n) {
+            Object.entries(images).forEach(([key, image]) => {
+                if (!attachImages.includes(this.images[image['id']])) {
+                    attachImages.push(this.images[image['id']])
+                    if (typeof this.images[image['id']].file !== 'undefined') {
+                        n++
+                    }
+                }
+            })
+            return n
         },
         deletePost() {
 

@@ -4,18 +4,22 @@ namespace App\Services;
 
 
 
+use App\Models\Image;
+use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
 class PostContentService
 {
-    private array $arrayIndex;
+
     private array $upsert = [];
     private string $updatedAt;
 
-    public Model $model;
+    private Model $model;
 
-    public string $secIndexColumn;
+    private string $secIndexColumn;
+    private array $arrayIndex = [];
+    private array $arrayImages = [];
 
     public function __construct(array $data, Model $model, array $columns, string $secIndexColumn = 'name')
     {
@@ -50,6 +54,10 @@ class PostContentService
             } else {
                 $this->arrayIndex[$item[$secIndexColumn]] = $index;
             }
+
+            if (isset($item['images'])) {
+                $this->arrayImages[$item[$secIndexColumn]] = $item['images'];
+            }
         }
 
         $columns[] = 'updated_at';
@@ -67,15 +75,23 @@ class PostContentService
             ->get();
 
         $sync = array();
-
+        dump($this->arrayImages);
         foreach ($dataResultArray as $item) {
 
             if (array_key_exists($item['id'], $this->arrayIndex)) {
                 $sync[$item['id']] = ['sort' => $this->arrayIndex[$item['id']]];
+
+
             }else{
                 $sync[$item['id']] = ['sort' => $this->arrayIndex[$item[$this->secIndexColumn]]];
+                if (isset($this->arrayImages[$item[$this->secIndexColumn]])) {
+                    dump($this->arrayImages[$item[$this->secIndexColumn]]);
+                }
+
             }
+
         }
+
 
         return $sync;
     }

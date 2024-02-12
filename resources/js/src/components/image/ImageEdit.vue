@@ -39,10 +39,22 @@
                 </span>
                         </div>
                     </div>
-                    <span class="p-float-label input-item">
-                <InputText @click="generateSlug" v-model="image.slug" class="w-full"/>
+
+                    <div class="flex flex-wrap gap-1">
+                        <div class="grow">
+                                  <span class="p-float-label input-item">
+                <InputText @click="insertSlug" v-model="image.slug" class="w-full"/>
                 <label>Имя файла</label>
                 </span>
+                        </div>
+                        <div>
+                            <Button @click="generateSlug" class="mt-2"
+                                    v-tooltip.top="'Сгенерировать URL'"
+                                    icon="pi pi-link" outlined aria-label="Gen Slug"/>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>
@@ -70,10 +82,13 @@ export default {
         isEditImage: false
     },
     methods: {
-        generateSlug() {
+        insertSlug() {
             if (this.image.slug === '' && this.image.name !== '') {
-                this.image.slug = strSlug(this.image.name)
+                this.generateSlug()
             }
+        },
+        generateSlug() {
+            this.image.slug = strSlug(this.image.name)
         },
         insertNameInAlt() {
             if (this.image.name !== '') {
