@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('alt')->nullable();
             $table->string('slug')->nullable();
             $table->string('path')->nullable();
+            $table->string('copyright')->nullable();
             $table->timestamps();
         });
     }
