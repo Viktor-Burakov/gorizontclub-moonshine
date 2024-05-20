@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Actions\Post;
 
+use App\Actions\Image\ImageUpsertAction;
 use App\Enums\PostEnum;
 use App\Models\Image;
 use App\Models\Post;
 use App\Services\ImageService;
-use App\Services\PostContentService;
 use Illuminate\Support\Facades\Storage;
 use ReflectionClass;
 
@@ -39,6 +39,7 @@ class PostImagesCreateOrUpdateAction
                             $thumbnail->resize($thumbnailOption['width']);
                             $thumbnail->saveToJpgAndWebP($storePath);
                         }
+
                         $imageDB->update([
                             'name' => $image['name'],
                             'alt' => $image['alt'],
@@ -59,11 +60,7 @@ class PostImagesCreateOrUpdateAction
                 }
             }
 
-            $images = new PostContentService(
-                $data['images'],
-                new Image,
-                ['name', 'alt']
-            );
+            (new ImageUpsertAction)($data['images']);
         }
 
         if (!empty($data['preview'])) {
@@ -71,7 +68,6 @@ class PostImagesCreateOrUpdateAction
                 $post = Post::select(['id', 'preview', 'slug'])
                     ->where('preview', $data['oldPreview'])
                     ->first();
-
 
                 $pathPreview = storage_path('app/public/' . PostEnum::POST_PREVIEW['dir'] . $post->slug);
 

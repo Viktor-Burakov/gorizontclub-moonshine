@@ -1,45 +1,36 @@
 <?php
 
-declare(strict_types=1);
-
 namespace App\Actions\ContentBlock;
 
+
+use App\Actions\Image\ImageUpsertAndSyncAction;
 use App\Models\ContentBlock;
-use App\Models\Image;
-use App\Services\ImageService;
+use Illuminate\Support\Carbon;
 
 class ContentBlockCreateOrUpdateAction
 {
-    public function __invoke($data): void
+    public function __invoke(array $data): array
     {
-        $postId = $data['post_id'];
-        unset($data['post_id']);
-        if (!empty($data['content_block_images'])) {
-            foreach ($data['content_block_images'] as $imageFile) {
-                $image = new Image();
+        $sync = array();
 
-                $image->name = $data['name'];
-                $image->alt = $data['name'];
+        foreach ($data as $index => $item) {
+            $id = (isset($item['id'])) ? $item['id'] : null;
 
-                $image->save();
+            $imagesSync = array();
 
-                $slug = str_slug($image->name . '-' . $image->id);
-
-                ImageService::generateThumbnails($imageFile->path(), $slug);
-
-                $image->path = $slug . '.jpg';
-                $image->slug = $slug . '.jpg';
-                $image->save();
-                $image->posts()->attach($postId);
-                if (!empty($data['id'])) {
-                    $image->contentBlocks()->attach($data['id']);
-                }
+            if (isset($item['images'])) {
+                $imagesSync = (new ImageUpsertAndSyncAction())($item['images']);
+                unset($item['images']);
             }
+
+            $contentBlock = ContentBlock::updateOrCreate(['id' => $id], $item);
+
+            $sync[$contentBlock->id] = ['sort' => $index];
+
+            $contentBlock->images()->sync($imagesSync);
         }
-        unset($data['content_block_images']);
 
-        $contentBlock = ContentBlock::updateOrCreate(['id' => $data['id']], $data);
-
-        $contentBlock->posts()->syncWithoutDetaching($postId);
+        return $sync;
     }
+
 }

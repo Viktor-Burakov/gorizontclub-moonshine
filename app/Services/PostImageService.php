@@ -3,38 +3,32 @@
 namespace App\Services;
 
 
-
 use App\Models\Image;
-use App\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Carbon;
 
-class PostContentService
+class PostImageService
 {
-
     private array $upsert = [];
     private string $updatedAt;
-
-    private Model $model;
-
-    private string $secIndexColumn;
     private array $arrayIndex = [];
     private array $arrayImages = [];
 
-    public function __construct(array $data, Model $model, array $columns, string $secIndexColumn = 'name')
+    private Model $model;
+
+    public function __construct(array $data, Model $model,array $columns = [])
     {
         $this->model = $model;
-        $this->secIndexColumn = $secIndexColumn;
         $this->updatedAt = Carbon::now();
 
         foreach ($data as $index => $item) {
-            $this->upsert[$index][$secIndexColumn] = '';
+            $this->upsert[$index]['name'] = '';
 
             if (!isset($item['id'])) {
                 $this->upsert[$index]['id'] = null;
-            }elseif (intval($item['id']) === 0) {
+            } elseif (intval($item['id']) === 0) {
                 $this->upsert[$index]['id'] = null;
-                $this->upsert[$index][$secIndexColumn] = $item['id'];
+                $this->upsert[$index]['name'] = $item['id'];
             } else {
                 $this->upsert[$index]['id'] = intval($item['id']);
             }
@@ -49,14 +43,14 @@ class PostContentService
 
             $this->upsert[$index]['updated_at'] = $this->updatedAt;
 
-            if (!$columns){
+            if (!$columns) {
                 $this->arrayIndex[$item['id']] = $index;
             } else {
-                $this->arrayIndex[$item[$secIndexColumn]] = $index;
+                $this->arrayIndex[$item['name']] = $index;
             }
 
             if (isset($item['images'])) {
-                $this->arrayImages[$item[$secIndexColumn]] = $item['images'];
+                $this->arrayImages[$item['name']] = $item['images'];
             }
         }
 
@@ -68,28 +62,24 @@ class PostContentService
             $columns
         );
     }
-    public function getSync():array
+
+    public function getSync(): array
     {
-        $dataResultArray = $this->model->select(['id', $this->secIndexColumn])
+        $dataResultArray = $this->model->select(['id', 'name'])
             ->where('updated_at', $this->updatedAt)
             ->get();
 
         $sync = array();
-        dump($this->arrayImages);
-        foreach ($dataResultArray as $item) {
 
+        foreach ($dataResultArray as $item) {
             if (array_key_exists($item['id'], $this->arrayIndex)) {
                 $sync[$item['id']] = ['sort' => $this->arrayIndex[$item['id']]];
-
-
-            }else{
-                $sync[$item['id']] = ['sort' => $this->arrayIndex[$item[$this->secIndexColumn]]];
-                if (isset($this->arrayImages[$item[$this->secIndexColumn]])) {
-                    dump($this->arrayImages[$item[$this->secIndexColumn]]);
+            } else {
+                $sync[$item['id']] = ['sort' => $this->arrayIndex[$item['name']]];
+                if (isset($this->arrayImages[$item['name']])) {
+                    dump($this->arrayImages[$item['name']]);
                 }
-
             }
-
         }
 
 

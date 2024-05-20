@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Actions\Post;
 
-use App\Models\ContentBlock;
-use App\Models\Image;
+use App\Actions\ContentBlock\ContentBlockCreateOrUpdateAction;
+use App\Actions\Image\ImageUpsertAndSyncAction;
 use App\Models\Post;
-use App\Services\PostContentService;
 
 class PostCreateOrUpdateAction
 {
@@ -27,26 +26,14 @@ class PostCreateOrUpdateAction
 
         $contentBlocksSync = array();
         if (isset($data['content_blocks'])) {
-            $contentBlocks = new PostContentService(
-                $data['content_blocks'],
-                new ContentBlock,
-                ['name', 'title', 'description']
-            );
-            $contentBlocksSync = $contentBlocks->getSync();
-
+            $contentBlocksSync = (new ContentBlockCreateOrUpdateAction)($data['content_blocks']);
             unset($data['content_blocks']);
         }
 
         $imagesSync = array();
 
         if (isset($data['images'])) {
-            $images = new PostContentService(
-                $data['images'],
-                new Image,
-                []
-            );
-            $imagesSync = $images->getSync();
-
+            $imagesSync = (new ImageUpsertAndSyncAction())($data['images']);
             unset($data['images']);
         }
 
@@ -57,6 +44,5 @@ class PostCreateOrUpdateAction
         $post->images()->sync($imagesSync);
 
         return 'Пост id:' . $post->id . ' обновлен!';
-
     }
 }
