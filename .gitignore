@@ -6,6 +6,7 @@
 /storage/*.key
 /vendor
 composer.lock
+package-lock.json
 .env
 .env.backup
 .env.production
