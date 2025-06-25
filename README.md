@@ -10,6 +10,7 @@
 - `composer ide`
 - `php artisan serve --host=gorizontclub --port=80`
 
+
 ### Деплой
 
 - `php artisan migrate`
